@@ -56,258 +56,203 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return 'O';
 	}
 
+	bool setLeftChild(regexNode*){
+		return 0;
+	}
+
 	regexNode* getLeftChild(){
 		return 0;
 	}
 
-	bool setLeftChild(regexNode*){
-		return 0;
-	}
 	
-	bool getRightChild(){
-		return 0;
-	}
-
 	bool setRightChild(regex *){
 		return 0;
 	}
 
+	regexNode* getRightChild(){
+		return 0;
+	}
 
 
 
 
 
 
-  regexNode * unaryRegexNode::getLeftChild(){
-    return this->leftChild;
-  }
 
+	/*********************** Unary Regex-Node **************************/
 	bool unaryRegexNode::setLeftChild(regexNode* newLeftChild){
 		leftChild = newLeftChild;
 		return true;
 	}
+
+	regexNode * unaryRegexNode::getLeftChild(){
+		return this->leftChild;
+	}
+
+	alphabet unaryRegexNode::getLeaves(){
+		return leftChild->getLeaves();
+	}
 	
 
 
 
 
 
-
-  regexNode * binaryRegexNode::getRightChild(){
-    return this->rightChild;
-  }
-
+	/*********************** Binary Regex-Node **************************/
+  
 	bool binaryRegexNode::	setRightChild(regexNode* newRightChild){
 		rightChild = newRightChild;
 		return true;
 	}
-
-
-
-
-
-
-
-  leafNode::leafNode(){
-		this->symbol = NULL;
-  }
-
-  leafNode::leafNode(char symbol){
-    this->symbol = symbol;
-   }
-		
-
-  void leafNode::display(){
-    if (symbol == NULLSET){
-      cout<<" NullSet ";
-    }
-    else if (symbol == EPSILON){
-      cout<<" Epsilon ";
-    }
-    else{
-        cout<<" "<<symbol<<" ";
-    }
-
-  }
-  
-  bool leafNode::isLeaf(){
-    return true;
-  }
-
 	
-  bool leafNode::isUnionTree(){
-    return true;
-  }
-		
-/*	
-	void leafNode::simplify(regexNode *p, char child){
-		return;
+	regexNode * binaryRegexNode::getRightChild(){
+		return this->rightChild;
 	}
-	
-	virtual void leafNode::simplify( regex * p) {}*/
-	
-	
-	
-  regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
-    return this;
-  }
+
+	alphabet binaryRegexNode::getLeaves(){
+		return leftChild->getLeaves() + rightChild->getLeaves();
+	}
+
+
+
+
+
+
+
+	/*********************** Leaf Node **************************/
+	leafNode::leafNode(){
+		this->symbol = '0';
+	}
+
+	leafNode::leafNode(char symbol){
+		this->symbol = symbol;
+	}
 		
-  char leafNode::getSymbol(){
-    return symbol;
-  }
+	bool leafNode::isLeaf(){
+		return true;
+	}
+
+	bool leafNode::isUnionTree(){
+		return true;
+	}
+
+	void leafNode::display(){
+		if (symbol == NULLSET){
+			cout<<" NullSet ";
+		}
+		else if (symbol == EPSILON){
+			cout<<" Epsilon ";
+		}
+		else{
+			cout<<" "<<symbol<<" ";
+		}
 	
-	/* still to look into this section to figure why i did the following in this class */
-  /*virtual void leafNode::setLeftChild(regexNode *) {}
-  virtual void leafNode::setRightChild(regexNode *) {}
-  virtual regexNode * leafNode::getLeftChild() {}
-  virtual regexNode * leafNode::getRightChild() {}*/
-/*
-  bool leafNode::setLeftChild(regexNode *) {
-    return false;
-  }
-  bool leafNode::setRightChild(regexNode *){
-    return false;
-  }
+	}
+
+
+	char leafNode::getSymbol(){
+		return symbol;
+	}
+
+	//does not do anything in the case that it is a NULLSET as of now. 
+	alphabet leafNode::getLeaves() {
+		alphabet leaf;
+		if(symbol == EPSILON){
+			leaf.setAlphaSymbol(128);// this corresponds to 
+		}
+		else {
+			leaf.setAlphaSymbols(&symbol);  
+		}
+	
+	
+		return leaf;
+	}	
+
+
+	regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
+		return this;
+	}
+
+  
  
- */
-/*
-  regexNode * leafNode::getLeftChild(){
-    return this->leftChild;
-  }
-  regexNode * leafNode::getRightChild(){
-    return this->rightChild;
-  }
-*/
-  
-  alphabet leafNode::getLeaves() {
-	  alphabet leaf;
-	  if(symbol == EPSILON){
-		leaf.setAlphaSymbol(128);// this corresponds to 
-	  }
-	  else {
-		leaf.setAlphaSymbols(&symbol);  
-	  }
-
-	  
-    return leaf;
-  }
-	
-
-
-  starNode::starNode(){}
-	
-  starNode::starNode (regexNode *leftChild){
-    this->leftChild = leftChild;
-  }
-	
-/*  bool starNode::setLeftChild(regexNode *leftChild){
-    this->leftChild = leftChild;
-    return true;
-  }
-*/
-	
-  regexNode * starNode::getLeftChild(){
-    return leftChild;
-  }
-	
-  void starNode::display(){
-    cout<<"(";
-    leftChild->display();
-    cout<<")*";
-  }
-
-/*
-  bool starNode::isLeaf(){
-    return false;
-  }
- */
-  
-  bool starNode::isUnionTree(){
-    return false;
-  }
 
 	
-  bool starNode::isStar(){
-    return true;
-  }
 	
 
-
-	
-/*	void starNode::simplify(regexNode *p, char whichChild){
-		return;
+	/*********************** Star Node **************************/
+	starNode::starNode(){
+		this->leftChild = 0;
 	}
 	
-	virtual void starNode::simplify( regex * p) {}
-*/
-/*
-bool starNode::setRightChild(regexNode * rightChild){
-  this->rightChild = NULL;
-  return false;
+	starNode::starNode (regexNode *newleftChild){
+		this->leftChild = newleftChild;
+	}
+	
+	
+	bool starNode::isStar(){
+		return true;
+	}
 
-}
-*/	
-  regexNode* starNode::simplify(){ // still not worked on simplification rules on start node. 
+	void starNode::display(){
+		cout<<"(";
+		leftChild->display();
+		cout<<")*";
+	}
+
+	
+	
+	
+
+
+  regexNode* starNode::simplify(){ // still not worked on simplification rules on start node
     return this;
   }
 
-  alphabet starNode::getLeaves(){
-    return leftChild->getLeaves();
-  }
 
 
 
-
-  unionNode::unionNode(){}
-	
-  unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
-    this->leftChild = leftChild;
-    this->rightChild = rightChild;
-  }
-	
-/*	
-  bool unionNode::setRightChild(regexNode* rightChild){
-    this->rightChild = rightChild;
-  }
-*/
-
-  regexNode * unionNode::getRightChild(){
-    return rightChild;
-  }
-	
-
-  void unionNode::display(){
-    cout<<"(";
-    leftChild->display();
-    cout<<"U";
-    rightChild->display();
-    cout<<")";
-  }
-	
-	
-	// is leaf is not required because it is inherited. 
-	
-/*	
-  bool unionNode::isStar(){ 
-    return false;
-  }
-*/
-  bool unionNode::isUnion(){
-    return true;
-  }
-	
-  bool unionNode::isUnionTree(){
-    if(this->isUnion()){
-      if (leftChild->isUnionTree()){
-	if (rightChild->isUnionTree()){
-          return true;
+	/*********************** Union Node **************************/
+	unionNode::unionNode(){
+		this->leftChild = 0;
+		this->rightChild = 0;	
 	}
-      }
-    }
-    else{
-      return false;
-    }
-  }
+	
+	unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
+		this->leftChild = leftChild;
+		this->rightChild = rightChild;
+	}
+	
+	bool unionNode::isUnion(){
+		return true;
+	}
+
+	bool unionNode::isUnionTree(){
+		if(this->isUnion()){
+			if (leftChild->isUnionTree()){
+				if (rightChild->isUnionTree()){
+					return true;
+				}
+			}
+		}
+		else{
+			return false;
+		}
+	}
+
+	void unionNode::display(){
+		cout<<"(";
+		leftChild->display();
+		cout<<"U";
+		rightChild->display();
+		cout<<")";
+	}
+
+
+
+
+	
+	
+	
 	
 			
   regexNode* unionNode::simplify(){
@@ -326,48 +271,26 @@ bool starNode::setRightChild(regexNode * rightChild){
 
    }
 	
-/*	 This is the older version of the simplify function which was not as graceful
-
-
-void unionNode::simplify(regexNode * p){
-  leftChild->simplify(this, 'l');
-  rightChild->simplify(this, 'r');
-  if(leftChild->isLeaf() && rightChild->isLeaf()){
-    if (leftChild->getSymbol() == NULLSET){
-      regexNode* temp;
-      temp = p;
-      p =rightChild;
-      delete leftChild;
-      delete temp;
-      
-    }	
-  }
-}
-
-*/
-
-  alphabet unionNode::getLeaves(){
-    return leftChild->getLeaves() + rightChild->getLeaves();
-  }
 
 
 
 
-  concatNode::concatNode(){}
+	/*********************** Concatination Node **************************/
+
+	concatNode::concatNode(){
+		this->leftChild = 0;
+		this->rightChild = 0;
+	}
 	
-  concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){// constructor for opNode
-    this->leftChild = leftChild;
-    this->rightChild = rightChild;
-  }
+	concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){// constructor for opNode
+		this->leftChild = leftChild;
+		this->rightChild = rightChild;
+	}
 	
-  void concatNode::setRightChild(regexNode* rightChild){
-    this->rightChild = rightChild;
-  }
+	bool concatNode::isConcat(){
+		return true;
+	}
 
-  regexNode * concatNode::getRightChild(){
-    return rightChild;
-  }
-	
 
   void concatNode::display(){
     cout<<"(";
@@ -377,39 +300,6 @@ void unionNode::simplify(regexNode * p){
     cout<<")";
   }
 	
-/*	
-  bool concatNode::isStar(){ 
-    return false;
-  }
-*/	
-  bool concatNode::isConcat(){
-    return true;
-  }
-	
-  bool concatNode::isUnionTree(){
-    return false;
-  }
-	
-/*	
-
-void simplify(regexNode * p, char whichChild ){
-  leftChild->simplify(this, 'l');
-  rightChild->simplify(this, 'r');
-  if(leftChild->isLeaf() && rightChild->isLeaf()){
-    if (leftChild->getSymbol() == NULLSET){
-      regexNode* temp;
-      if (whichChild =='l'){
-        temp = p->getLeftChild();
-        p->setLeftChild(rightChild);
-        delete leftChild;
-        delete temp;
-      }
-    }
-  }
-}
-virtual void simplify( regex * p) {}
-
-*/
 
 
   regexNode* concatNode::simplify(){  //not worked on simplification rules of this yet. 
@@ -417,9 +307,6 @@ virtual void simplify( regex * p) {}
   }
         
 
-  alphabet concatNode::getLeaves(){
-    return leftChild->getLeaves() + rightChild->getLeaves();
-  }
 
 
 
@@ -427,9 +314,9 @@ virtual void simplify( regex * p) {}
 
 
 
-
+/*********************** Regular Expression  **************************/
   regex::regex (){
-    this->root = NULL;
+    this->root = 0;
   }
  
   regex::regex (regexNode * root){	
@@ -550,26 +437,32 @@ switch (s[i]) {
     return root->isUnionTree();
   }
 
-  void regex::simplify(){
-    root = root->simplify();//
-  }
-	
+
+
+	void regex::setRoot (regexNode * root){
+		this->root = root;
+	}
+
+	regexNode * regex::getRoot(){
+		return this->root;
+	}
+
+ 
+
+		
   void regex::display(){
     root->display();
   }
 	
-  void regex::setRoot (regexNode * root){
-    this->root = root;
-  }
-	
-  regexNode * regex::getRoot(){
-    return this->root;
-  }
 	
   alphabet regex::getLeaves(){
     return root->getLeaves();
   }
-  
+
+	void regex::simplify(){
+		root = root->simplify();//
+	}
+
   regex * regex::operator + (regex * b){
     regexNode * temp1 = new unionNode (this->root, b->root);
     regex * temp = new regex(temp1);
@@ -588,28 +481,6 @@ switch (s[i]) {
     return temp;
   }
 	
-	
-
-//friend istream& operator >> (istream& s, regex& a);
-
-
-/*
-
-  void simplify(){};
-
-  void display(){};
-
-  void setRoot (regexNode * root){};
-
-
-
-*/
-
-
-
-
-
-
 
 ostream& operator << (ostream& s, regex* a){
 	a->display();
