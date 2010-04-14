@@ -160,6 +160,40 @@ int mainRegex(){
 	return 0;
 }
 
+
+
+int simplifyRegex(){
+	regexNode* l = new leafNode(NULLSET);
+	regexNode* r = new leafNode( 'r');
+	regexNode* u = new unionNode;
+	regexNode* c = new concatNode;
+	regexNode* s = new starNode(l);
+	
+/*
+	u->setChildren(r,l);
+	u->setChildren(l,r);
+
+	regex* reg = new regex(u);
+	
+	cout<<reg<<endl;
+
+	reg->simplify();
+	
+	cout<<reg<<endl;
+	delete reg;*/
+	regex* reg = new regex(s);
+	c->setChildren(l,r);
+	cout<<"done"<<endl;
+	
+	cout<<"done"<<endl;
+	cout<<reg<<endl;
+	cout<<"make"<<endl;
+	reg->simplify();
+	cout<<reg<<endl;
+	return 0;
+
+};
+
 int mainGNFA(){
   GNFA a(5);
   alphabet r ("pqrst1234");
@@ -172,6 +206,6 @@ int mainGNFA(){
 
 
 int main (){
-  return mainRegex();
+  return simplifyRegex();
 }
 

@@ -24,7 +24,7 @@ class regexNode{
 	virtual regexNode* getLeftChild();
 	virtual bool setRightChild(regexNode*);
 	virtual regexNode* getRightChild();
-	
+	virtual bool setChildren(regexNode*, regexNode*);
 	virtual void display() =0; 
 	virtual char getSymbol();
 	virtual alphabet getLeaves() =0; //returns the leaves of the tree in the form of a stringstream
@@ -59,7 +59,8 @@ class binaryRegexNode: public unaryRegexNode{
 	public:
 	bool setRightChild(regexNode *) ;  
 	regexNode * getRightChild();
-	
+	bool setChildren(regexNode* , regexNode* );
+		
 	alphabet getLeaves();
 	
 };

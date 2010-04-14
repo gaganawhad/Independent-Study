@@ -48,7 +48,7 @@ it tires to implement the simple rule,  null set U 'r' = r
     return false;
   }
 
-	bool isUnionTree(){
+	bool regexNode::isUnionTree(){
 		return false;
 	}
 	
@@ -56,23 +56,26 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return 'O';
 	}
 
-	bool setLeftChild(regexNode*){
+	bool regexNode::setLeftChild(regexNode*){
 		return 0;
 	}
 
-	regexNode* getLeftChild(){
+	regexNode* regexNode::getLeftChild(){
 		return 0;
 	}
 
 	
-	bool setRightChild(regex *){
+	bool regexNode::setRightChild(regexNode*){
 		return 0;
 	}
 
-	regexNode* getRightChild(){
+	regexNode* regexNode::getRightChild(){
 		return 0;
 	}
 
+	bool regexNode::setChildren(regexNode* , regexNode*){
+		return 0;
+	}
 
 
 
@@ -100,7 +103,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	/*********************** Binary Regex-Node **************************/
   
-	bool binaryRegexNode::	setRightChild(regexNode* newRightChild){
+	bool binaryRegexNode::setRightChild(regexNode* newRightChild){
 		rightChild = newRightChild;
 		return true;
 	}
@@ -111,6 +114,12 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	alphabet binaryRegexNode::getLeaves(){
 		return leftChild->getLeaves() + rightChild->getLeaves();
+	}
+
+	bool binaryRegexNode::setChildren(regexNode* newLeftChild, regexNode* newRightChild){
+		this->leftChild = newLeftChild;
+		this->rightChild = newRightChild;
+		return true;
 	}
 
 
@@ -171,6 +180,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
 		return this;
+
 	}
 
   
@@ -204,8 +214,19 @@ it tires to implement the simple rule,  null set U 'r' = r
 	
 
 
-  regexNode* starNode::simplify(){ // still not worked on simplification rules on start node
-    return this;
+  regexNode* starNode::simplify(){ 
+	  leftChild = leftChild->simplify();
+	  if(leftChild->isLeaf()){
+		  
+		  /* NULLSET * = {EPSILON} */
+		  if (leftChild->getSymbol() == NULLSET){  
+			  regexNode* temp = new leafNode(EPSILON);
+			  delete leftChild;
+			  delete this;
+			  return temp;
+		  }
+	  }
+	  return this;
   }
 
 
@@ -226,6 +247,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
+
+	/*simplify this, you wil need only one if condition */
 	bool unionNode::isUnionTree(){
 		if(this->isUnion()){
 			if (leftChild->isUnionTree()){
@@ -259,15 +282,25 @@ it tires to implement the simple rule,  null set U 'r' = r
     leftChild = leftChild->simplify();
     rightChild = rightChild->simplify();
       if(leftChild->isLeaf() && rightChild->isLeaf()){
-        if (leftChild->getSymbol() == NULLSET){ // due to this the parent of this node gets the right child as its node, and left child and this node itslef is deleted. 
+		  
+		  /* NULLSET U R = R  */
+        if (leftChild->getSymbol() == NULLSET){ 
           regexNode* temp = rightChild;
           delete leftChild;
           delete this;
           return temp;
         }
-		// other rules will come in here.  Think about possible datastrcuture like a look up table to be used here to make simplification easy. 
+		  
+		/* R U NULLSET = R  */  
+		if (rightChild->getSymbol() == NULLSET){ 
+			  regexNode* temp = leftChild;
+			  delete rightChild;
+			  delete this;
+			  return temp;
+		  }
+		  
       }
-		
+	  return this;	
 
    }
 	
@@ -282,7 +315,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		this->rightChild = 0;
 	}
 	
-	concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){// constructor for opNode
+	concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){
 		this->leftChild = leftChild;
 		this->rightChild = rightChild;
 	}
@@ -293,7 +326,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
   void concatNode::display(){
-    cout<<"(";
+	cout<<"(";
     leftChild->display();
     cout<<".";
     rightChild->display();
@@ -302,8 +335,45 @@ it tires to implement the simple rule,  null set U 'r' = r
 	
 
 
-  regexNode* concatNode::simplify(){  //not worked on simplification rules of this yet. 
-    return this;
+  regexNode* concatNode::simplify(){   
+	  leftChild = leftChild->simplify();
+	  rightChild = rightChild->simplify();
+      if(leftChild->isLeaf() && rightChild->isLeaf()){
+		  
+		  /*NULLSET . R = NULLSET  */
+		  if (leftChild->getSymbol() == NULLSET){  
+			  regexNode* temp = leftChild;
+			  delete rightChild;
+			  delete this;
+			  return temp;
+		  }
+		  
+		  /* R . NULLSET = NULLSET */
+		  if (rightChild->getSymbol() == NULLSET){ 
+			  regexNode* temp = rightChild;
+			  delete leftChild;
+			  delete this;
+			  return temp;
+		  }
+		  
+		  /* EPSILON . R = R */
+		  if (leftChild->getSymbol() == EPSILON){
+			  regexNode* temp = rightChild;
+			  delete leftChild;
+			  delete this;
+			  return temp;
+		  }
+		  
+		  /* R . EPSLION = R */
+		  if (rightChild->getSymbol() == EPSILON){  
+			  regexNode* temp = leftChild;
+			  delete rightChild;
+			  delete this;
+			  return temp;
+		  }
+      }
+	  
+	  return this;
   }
         
 
@@ -483,7 +553,9 @@ switch (s[i]) {
 	
 
 ostream& operator << (ostream& s, regex* a){
+	
 	a->display();
+	
 	return s;
 }
 

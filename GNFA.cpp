@@ -26,7 +26,7 @@ GNFA::GNFA(int n){
 	
 	for (int i = 0; i<noOfStates; i++) {
 		for (int j = 0; j<noOfStates; j++){
-			this->transFunction[i][j]=NULL;
+			//this->transFunction[i][j];
 		}
 	}
 	
@@ -123,7 +123,7 @@ void GNFA::displayAlphabet(){
 
 void GNFA::displayTransitionFunction(){
 	cout<<"This is the transition function:"<<endl;
-	for (int i = 0 ; i < this->noOfStates; i++){
+	/*for (int i = 0 ; i < this->noOfStates; i++){
 		for (int j = 0 ; i < this->noOfStates; i++){
 			if(transFunction[i][j] == NULL){
 				cout<< "	Start State :"<<i<<endl;
@@ -131,7 +131,7 @@ void GNFA::displayTransitionFunction(){
 				cout<< "	Regular Expresssion :"<<transFunction[i][j]<<endl<<endl<<endl;
 			}
 		}
-	}
+	}*/
 	
 }
 

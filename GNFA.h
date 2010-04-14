@@ -41,7 +41,7 @@ public:
 	void GNFA::displayStartState();	
 	void GNFA::displayAcceptStates();
 	void GNFA::displayAlphabet();
-	//void GNFA::displayTransitionFunction();	
+	void GNFA::displayTransitionFunction();	
 	void GNFA::display();	
   bool isDeterministic();
   //multiSet* testfun();
