@@ -180,16 +180,19 @@ int simplifyRegex(){
 	reg->simplify();
 	
 	cout<<reg<<endl;
-	delete reg;*/
+	delete reg;
+
+*/
 	regex* reg = new regex(s);
 	c->setChildren(l,r);
-	cout<<"done"<<endl;
-	
-	cout<<"done"<<endl;
+	s->setLeftChild(c);
 	cout<<reg<<endl;
-	cout<<"make"<<endl;
 	reg->simplify();
 	cout<<reg<<endl;
+	u->setChildren(l,r);
+	reg->setRoot(u);
+	cout<<reg<<endl;
+	
 	return 0;
 
 };
