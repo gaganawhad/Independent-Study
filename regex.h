@@ -33,6 +33,7 @@ class regexNode{
 	virtual regexNode * simplify() =0; // virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
   //virtual void delTree()=0;
   virtual ~regexNode();
+  virtual bool cascadeDel()=0;
 
 };
 
@@ -40,7 +41,7 @@ class regexNode{
 /*********************** Unary Regex Node **************************/
 class unaryRegexNode: public regexNode{
 	protected:
-        ~unaryRegexNode();
+	bool cascadeDel();
 
 	regexNode* leftChild;
 
@@ -58,7 +59,7 @@ class unaryRegexNode: public regexNode{
 /*********************** Binary Regex Node **************************/
 class binaryRegexNode: public unaryRegexNode{
 	protected:
-        ~binaryRegexNode();
+        bool cascadeDel();
 
         regexNode* rightChild;
     
@@ -89,7 +90,7 @@ class leafNode: public regexNode {
 		
 	void display();
   char getSymbol();
-	
+	bool cascadeDel();
   alphabet getLeaves();
 	regexNode* simplify();
 };
@@ -166,7 +167,7 @@ class regex{
   regex (regexNode * );	
   regex (const char* s);	
   ~regex();
-		
+	bool cascadeDel();
   bool isNULL();
   bool isEmpty();
   bool isLeaf();	

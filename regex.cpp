@@ -100,11 +100,13 @@ it tires to implement the simple rule,  null set U 'r' = r
        //   leftChild->delTree();
        // }
 
-        unaryRegexNode::~unaryRegexNode(){
+        bool unaryRegexNode::cascadeDel(){
           cout<<"Destructor unary RegexNode got called"<<endl;
 			if( leftChild != 0){
 				delete leftChild;
 			}
+			delete this;
+			return true;
         }
 
 
@@ -131,12 +133,16 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
-	binaryRegexNode::~binaryRegexNode(){
+	bool binaryRegexNode::cascadeDel(){
 		cout<<"destructor binaryRegexNode got called"<<endl;
 		if (rightChild != 0){
 			delete rightChild;
 		}
-			
+		if (leftChild != 0){
+			delete leftChild;
+		}	
+		delete this;
+		return true;
 	}
 
 
@@ -198,6 +204,11 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return this;
 
 	}
+	
+	bool leafNode::cascadeDel(){
+		delete this;
+		return true;
+	}
 
   
  
@@ -241,7 +252,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /* NULLSET * = {EPSILON} */
 		  if (leftChild->getSymbol() == NULLSET){  
 			  regexNode* temp = new leafNode(EPSILON);
-			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
+			  delete leftChild; //not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -305,8 +316,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  
 		  /* NULLSET U R = R  */
         if (leftChild->getSymbol() == NULLSET){ 
-          regexNode* temp = rightChild;
-          //delete leftChild;not required because deleting this (on next line) will delete rightchild
+          regexNode* temp = rightChild;//becaue rightChild will no longer exist after deleting this
+          delete leftChild; //not required because deleting this (on next line) will delete rightchild
           delete this;
           return temp;
         }
@@ -314,7 +325,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		/* R U NULLSET = R  */  
 		else if (rightChild->getSymbol() == NULLSET){ 
 			  regexNode* temp = leftChild;
-			  //delete rightChild;not required because deleting this (on next line) will delete rightchild
+			  delete rightChild;//not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -363,7 +374,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /*NULLSET . R = NULLSET  */
 		  if (leftChild->getSymbol() == NULLSET){  
 			  regexNode* temp = leftChild;
-			  //delete rightChild; not required because deleting this (on next line) will delete rightchild
+			  delete rightChild; //not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -371,7 +382,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /* R . NULLSET = NULLSET */
 		  else if (rightChild->getSymbol() == NULLSET){ 
 			  regexNode* temp = rightChild;
-			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
+			  delete leftChild; //not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -379,7 +390,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /* EPSILON . R = R */
 		  else if (leftChild->getSymbol() == EPSILON){
 			  regexNode* temp = rightChild;
-			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
+			  delete leftChild; //not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -387,7 +398,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /* R . EPSLION = R */
 		  else if (rightChild->getSymbol() == EPSILON){  
 			  regexNode* temp = leftChild;
-			  //delete rightChild; not required because deleting this (on next line) will delete rightchild
+			  delete rightChild; //not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -496,8 +507,13 @@ switch (s[i]) {
       }
 
   regex::~regex(){
-    delete root;
+	root->cascadeDel();
   }
+  
+  bool regex::cascadeDel(){
+	root->cascadeDel();
+	return true;
+	}
 
   bool regex::isNULL(){
     if (root->isLeaf() && root->getSymbol() == NULLSET){
