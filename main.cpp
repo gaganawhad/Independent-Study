@@ -187,6 +187,19 @@ int simplifyRegex(){
 	c->setChildren(l,r);
 	s->setLeftChild(c);
 	cout<<reg<<endl;
+	
+	
+	
+	delete s;
+	reg->setRoot(c);
+	reg->display();
+	delete reg;/*
+	reg = new regex ();
+	l = new leafNode(NULLSET);
+	r = new leafNode( 'r');
+	u->setChildren(l,r);
+	reg->setRoot(u);
+	cout<<reg<<endl;
 	reg->simplify();
 	cout<<reg<<endl;
 /*        delete reg;
@@ -206,17 +219,24 @@ int deleteRegex(){
 }
 
 int mainGNFA(){
+	cout<<"in here"<<endl;
   GNFA a(5);
+	cout<<"1"<<endl;
   alphabet r ("pqrst1234");
-  a.setAlphabet(r);
+	cout<<"2"<<endl;
+	a.setAlphabet(r);
+	cout<<"3"<<endl;
   a.setFinalState(3);
+	cout<<"4"<<endl;
   a.setFinalState(5);
+	cout<<"5"<<endl;
 	cout<<a<<endl;
+	
 	cout<<"this is new line";
 }
 
 
 int main (){
-  return simplifyRegex();
+  return mainGNFA();
 }
 

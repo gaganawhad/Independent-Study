@@ -16,19 +16,30 @@
 
 	//This constructor creates a simple GNFA class that has states and has all possible transition functions as null set
 GNFA::GNFA(int n){
+	cout<<"a"<<endl;
   this->noOfStates = n;
   //transVector.resize(noOfStates);
-  this->transFunction.resize(noOfStates);
-  for (int i = 0; i<noOfStates; i++) {
-    this->transFunction[i].resize(noOfStates);
-  }
-  this->acceptStates.resize(noOfStates);
-	
+  cout<<"b"<<endl;
+	this->transFunction.resize(noOfStates);
+	cout<<"c"<<endl;
 	for (int i = 0; i<noOfStates; i++) {
+		cout<<"what?"<<endl;
+//		this->transFunction[i].resize(noOfStates);
+		cout<<"k this is crazy"<<endl;
+	}
+	cout<<"d"<<endl;
+  //this->acceptStates.resize(noOfStates);
+	cout<<"e"<<endl;
+	for (int i = 0; i<noOfStates; i++) {
+		regex test;
 		for (int j = 0; j<noOfStates; j++){
-			//this->transFunction[i][j];
+			cout<<i<<j<<endl;
+			test.setRoot(new leafNode(NULLSET));
+			cout<<test<<endl;
+			transFunction[i].push_back(test); //trying to set each regex to null;
 		}
 	}
+	cout<<"f"<<endl;
 	
 //this->states = new bitset(noOfStates);
 	
@@ -123,15 +134,15 @@ void GNFA::displayAlphabet(){
 
 void GNFA::displayTransitionFunction(){
 	cout<<"This is the transition function:"<<endl;
-	/*for (int i = 0 ; i < this->noOfStates; i++){
+	for (int i = 0 ; i < this->noOfStates; i++){
 		for (int j = 0 ; i < this->noOfStates; i++){
-			if(transFunction[i][j] == NULL){
+			if(!transFunction[i][j].isNULL()){
 				cout<< "	Start State :"<<i<<endl;
 				cout<< "	End State :"<<j<<endl;
 				cout<< "	Regular Expresssion :"<<transFunction[i][j]<<endl<<endl<<endl;
 			}
 		}
-	}*/
+	}
 	
 }
 

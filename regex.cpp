@@ -53,7 +53,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 	}
 	
 	char regexNode::getSymbol(){
-		return 'O';
+		return '0';
 	}
 
 	bool regexNode::setLeftChild(regexNode*){
@@ -101,8 +101,7 @@ it tires to implement the simple rule,  null set U 'r' = r
        // }
 
         bool unaryRegexNode::cascadeDel(){
-          cout<<"Destructor unary RegexNode got called"<<endl;
-			if( leftChild != 0){
+          if( leftChild != 0){
 				delete leftChild;
 			}
 			delete this;
@@ -134,7 +133,6 @@ it tires to implement the simple rule,  null set U 'r' = r
 	}
 
 	bool binaryRegexNode::cascadeDel(){
-		cout<<"destructor binaryRegexNode got called"<<endl;
 		if (rightChild != 0){
 			delete rightChild;
 		}
@@ -242,11 +240,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
   regexNode* starNode::simplify(){ 
-	  cout<<"came in star node to simplify"<<endl;
 	  leftChild = leftChild->simplify();
-	  cout<<"simplified leftchild this is what it looks like :";
-	  leftChild->display();
-	  cout<<endl;
 	  if(leftChild->isLeaf()){
 		  
 		  /* NULLSET * = {EPSILON} */
