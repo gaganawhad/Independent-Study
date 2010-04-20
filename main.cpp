@@ -189,13 +189,21 @@ int simplifyRegex(){
 	cout<<reg<<endl;
 	reg->simplify();
 	cout<<reg<<endl;
+/*        delete reg;
 	u->setChildren(l,r);
 	reg->setRoot(u);
 	cout<<reg<<endl;
-	
+*/	
 	return 0;
 
 };
+
+int deleteRegex(){
+
+  
+  return 0;
+
+}
 
 int mainGNFA(){
   GNFA a(5);

@@ -77,7 +77,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return 0;
 	}
 
-
+        regexNode::~regexNode(){}
 
 
 
@@ -95,8 +95,15 @@ it tires to implement the simple rule,  null set U 'r' = r
 	alphabet unaryRegexNode::getLeaves(){
 		return leftChild->getLeaves();
 	}
-	
 
+       // void unaryRegexNode::delTree(){
+       //   leftChild->delTree();
+       // }
+
+        unaryRegexNode::~unaryRegexNode(){
+          cout<<"i also got called"<<endl;
+          delete leftChild;
+        }
 
 
 
@@ -122,6 +129,11 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
+        binaryRegexNode::~binaryRegexNode(){
+          cout<<"i got called"<<endl;
+          delete rightChild;
+            delete leftChild;
+        }
 
 
 
@@ -397,6 +409,7 @@ it tires to implement the simple rule,  null set U 'r' = r
     regexStack opeStack;
     regexStack treePtrs;
       for(int i=0; s[i]!='\0'; i++){
+
 			
 /*
 switch (s[i]) {
@@ -473,7 +486,10 @@ switch (s[i]) {
        }
        root = treePtrs.pop(); //this is because this will be the child of a higher level 
       }
-		
+
+  regex::~regex(){
+    delete root;
+  }
 
   bool regex::isNULL(){
     if (root->isLeaf() && root->getSymbol() == NULLSET){
