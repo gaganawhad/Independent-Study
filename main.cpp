@@ -167,7 +167,7 @@ int simplifyRegex(){
 	regexNode* r = new leafNode( 'r');
 	regexNode* u = new unionNode;
 	regexNode* c = new concatNode;
-	regexNode* s = new starNode(l);
+	regexNode* s = new starNode;
 	
 /*
 	u->setChildren(r,l);

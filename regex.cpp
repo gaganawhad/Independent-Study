@@ -101,8 +101,10 @@ it tires to implement the simple rule,  null set U 'r' = r
        // }
 
         unaryRegexNode::~unaryRegexNode(){
-          cout<<"i also got called"<<endl;
-          delete leftChild;
+          cout<<"Destructor unary RegexNode got called"<<endl;
+			if( leftChild != 0){
+				delete leftChild;
+			}
         }
 
 
@@ -129,11 +131,13 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
-        binaryRegexNode::~binaryRegexNode(){
-          cout<<"i got called"<<endl;
-          delete rightChild;
-            delete leftChild;
-        }
+	binaryRegexNode::~binaryRegexNode(){
+		cout<<"destructor binaryRegexNode got called"<<endl;
+		if (rightChild != 0){
+			delete rightChild;
+		}
+			
+	}
 
 
 
@@ -227,13 +231,17 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
   regexNode* starNode::simplify(){ 
+	  cout<<"came in star node to simplify"<<endl;
 	  leftChild = leftChild->simplify();
+	  cout<<"simplified leftchild this is what it looks like :";
+	  leftChild->display();
+	  cout<<endl;
 	  if(leftChild->isLeaf()){
 		  
 		  /* NULLSET * = {EPSILON} */
 		  if (leftChild->getSymbol() == NULLSET){  
 			  regexNode* temp = new leafNode(EPSILON);
-			  delete leftChild;
+			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -298,15 +306,15 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /* NULLSET U R = R  */
         if (leftChild->getSymbol() == NULLSET){ 
           regexNode* temp = rightChild;
-          delete leftChild;
+          //delete leftChild;not required because deleting this (on next line) will delete rightchild
           delete this;
           return temp;
         }
 		  
 		/* R U NULLSET = R  */  
-		if (rightChild->getSymbol() == NULLSET){ 
+		else if (rightChild->getSymbol() == NULLSET){ 
 			  regexNode* temp = leftChild;
-			  delete rightChild;
+			  //delete rightChild;not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
@@ -355,31 +363,31 @@ it tires to implement the simple rule,  null set U 'r' = r
 		  /*NULLSET . R = NULLSET  */
 		  if (leftChild->getSymbol() == NULLSET){  
 			  regexNode* temp = leftChild;
-			  delete rightChild;
+			  //delete rightChild; not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
 		  
 		  /* R . NULLSET = NULLSET */
-		  if (rightChild->getSymbol() == NULLSET){ 
+		  else if (rightChild->getSymbol() == NULLSET){ 
 			  regexNode* temp = rightChild;
-			  delete leftChild;
+			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
 		  
 		  /* EPSILON . R = R */
-		  if (leftChild->getSymbol() == EPSILON){
+		  else if (leftChild->getSymbol() == EPSILON){
 			  regexNode* temp = rightChild;
-			  delete leftChild;
+			  //delete leftChild; not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
 		  
 		  /* R . EPSLION = R */
-		  if (rightChild->getSymbol() == EPSILON){  
+		  else if (rightChild->getSymbol() == EPSILON){  
 			  regexNode* temp = leftChild;
-			  delete rightChild;
+			  //delete rightChild; not required because deleting this (on next line) will delete rightchild
 			  delete this;
 			  return temp;
 		  }
