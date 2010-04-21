@@ -233,10 +233,54 @@ int mainGNFA(){
 	cout<<a<<endl;
 	
 	cout<<"this is new line";
+	return 0;
 }
 
+int testSetRoot(){
+	vector<regex> funkyStack;
+	regex reg;
+	regexNode* l = new leafNode(NULLSET);
+	reg.setRoot(l);
+	cout<<reg<<endl;
+	funkyStack.push_back(reg);
+	regexNode* r = new leafNode(NULLSET);
+	reg.setRoot(r);
+	cout<<reg<<endl;
+	funkyStack.push_back(reg);
+	regexNode* s = new leafNode(NULLSET);
+	reg.setRoot(s);
+	cout<<reg<<endl;
+	funkyStack.push_back(reg);
+	regexNode* t = new leafNode(NULLSET);
+	reg.setRoot(t);
+	cout<<reg<<endl;
+	funkyStack.push_back(reg);
+	regexNode* u = new leafNode(NULLSET);
+	reg.setRoot(u);
+	cout<<reg<<endl;
+	funkyStack.push_back(reg);
+	
+	
+	return 0;
+}
+
+int testVector(){
+	vector <int> intVec;
+	int i;
+	for(int j =0 ; j<10; j++){
+		i=2;
+		intVec.push_back(i);
+	
+	}
+	for(int j =0 ; j<10; j++){
+		cout<<intVec[j]<<endl;
+		
+	}
+	
+}
+	
 
 int main (){
-  return mainGNFA();
+  return testSetRoot();
 }
 

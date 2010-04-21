@@ -20,7 +20,19 @@ GNFA::GNFA(int n){
   this->noOfStates = n;
   //transVector.resize(noOfStates);
   cout<<"b"<<endl;
-	this->transFunction.resize(noOfStates);
+	transVector temp;
+	for (int i =0; i<noOfStates;i++){
+		regex test;
+		for (int j = 0; j<noOfStates; j++){
+			cout<<i<<j<<endl;
+			test.setRoot(new leafNode(NULLSET));
+			cout<<test<<endl;
+			temp.push_back(test); //trying to set each regex to null;
+		}	
+		transFunction.push_back(temp);
+	}
+	
+/*	this->transFunction.resize(noOfStates);
 	cout<<"c"<<endl;
 	for (int i = 0; i<noOfStates; i++) {
 		cout<<"what?"<<endl;
@@ -41,7 +53,7 @@ GNFA::GNFA(int n){
 	}
 	cout<<"f"<<endl;
 	
-//this->states = new bitset(noOfStates);
+//this->states = new bitset(noOfStates);*/
 	
 }
 	
@@ -86,7 +98,7 @@ bool GNFA::resetFinalState(int i){
    if(i <= this->noOfStates){
     acceptStates[i-1] = 0;//i-1 to hit the right state
    }
-  return true;
+	return true;
 }
 	
 
