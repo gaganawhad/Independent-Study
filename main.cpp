@@ -193,7 +193,8 @@ int simplifyRegex(){
 	delete s;
 	reg->setRoot(c);
 	reg->display();
-	delete reg;/*
+	delete reg;
+	/*
 	reg = new regex ();
 	l = new leafNode(NULLSET);
 	r = new leafNode( 'r');
@@ -218,23 +219,6 @@ int deleteRegex(){
 
 }
 
-int mainGNFA(){
-	cout<<"in here"<<endl;
-  GNFA a(5);
-	cout<<"1"<<endl;
-  alphabet r ("pqrst1234");
-	cout<<"2"<<endl;
-	a.setAlphabet(r);
-	cout<<"3"<<endl;
-  a.setFinalState(3);
-	cout<<"4"<<endl;
-  a.setFinalState(5);
-	cout<<"5"<<endl;
-	cout<<a<<endl;
-	
-	cout<<"this is new line";
-	return 0;
-}
 
 int testSetRoot(){
 	vector<regexNode*> funkyStack;
@@ -281,6 +265,31 @@ int testVector(){
 	
 }
 	
+int mainGNFA(){
+	regexNode* l = new leafNode(NULLSET);
+	regexNode* r = new leafNode( 'r');
+	regexNode* u = new unionNode;
+	regexNode* c = new concatNode;
+	regexNode* s = new starNode;
+  u->setChildren(l,r);
+  s->setLeftChild(u);
+	regex reg(s);
+	cout<<reg<<endl;
+ 
+   GNFA a(5);
+  alphabet alpha ("pqrst1234");
+
+	a.setAlphabet(alpha);
+
+  a.setAcceptState(3);
+
+  a.setAcceptState(5);
+  a.setTransition(0,3,reg.getRoot());
+
+	
+	cout<<a;
+	return 0;
+}
 
 int main (){
   return mainGNFA();

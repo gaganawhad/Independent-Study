@@ -24,17 +24,17 @@ public:
   alphabet sigma; // How do you set a class that is inside a class? *question*//
 //bitset <20> states; // everythign that is one is a final state. how do you include a bit set that you do not know the lenght to?
 //bitset* states; // everythign that is one is a final state. how do you include a bit set that you do not know the lenght to?
-  typedef vector <regex> transVector; //creates a new type of column vectors that hold the regular expression pointers called transVector; This will represent the receiveing states?. there will be one transvector for each state. it iwll store regular expresions going to other states. 
+  typedef vector <regexNode*> transVector; //creates a new type of column vectors that hold the regular expression pointers called transVector; This will represent the receiveing states?. there will be one transvector for each state. it iwll store regular expresions going to other states. 
   vector <transVector> transFunction; // this is a vector of vectors used to store the transition function. 
   vector<bool> acceptStates;//holds in pointers 0-n-1 states 1 to n
   //no final states
 
 
   GNFA(int n);
-  bool setTransition (int i, int j, regex k);
+  bool setTransition (int i, int j, regexNode* k);
   bool clearTransition (int i, int j);
-  bool setFinalState(int i);
-  bool resetFinalState(int i);
+  bool setAcceptState(int i);
+  bool resetAcceptState(int i);
   bool setAlphabet(char* temp);
   bool setAlphabet(alphabet);
 	void GNFA::displayStates();

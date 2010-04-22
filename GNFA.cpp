@@ -16,45 +16,19 @@
 
 	//This constructor creates a simple GNFA class that has states and has all possible transition functions as null set
 GNFA::GNFA(int n){
-	cout<<"a"<<endl;
 	this->noOfStates = n;
-	cout<<"b"<<endl;
+	this->acceptStates.resize(noOfStates);
+	
+	
 	transVector temp;
 	for (int i =0; i<noOfStates;i++){
-		regex test;
 		for (int j = 0; j<noOfStates; j++){
 			cout<<i<<j<<endl;
-			test.setRoot(new leafNode(NULLSET));
-			cout<<test<<endl;
-			temp.push_back(test); //trying to set each regex to null;
+			temp.push_back(new leafNode(NULLSET));
 		}	
 		transFunction.push_back(temp);
 	}
-	/*
-	this->transFunction.resize(noOfStates);
-	cout<<"c"<<endl;
-	for (int i = 0; i<noOfStates; i++) {
-		cout<<"what?"<<endl;
-				this->transFunction[i].resize(noOfStates);
-		cout<<"k this is crazy"<<endl;
-	}*/
-	cout<<"d"<<endl;
-	/*
-  //this->acceptStates.resize(noOfStates);
-	cout<<"e"<<endl;
-	for (int i = 0; i<noOfStates; i++) {
-		regex test;
-		for (int j = 0; j<noOfStates; j++){
-			cout<<i<<j<<endl;
-			test.setRoot(new leafNode(NULLSET));
-			cout<<test<<endl;
-			transFunction[i].push_back(test); //trying to set each regex to null;
-		}
-	}
-	cout<<"f"<<endl;
-	
-//this->states = new bitset(noOfStates);*/
-	
+
 }
 	
 
@@ -64,8 +38,9 @@ GNFA::GNFA(int n){
 
 
 //functions take two states and regular expression and then set the transiontion function
-bool GNFA::setTransition (int i, int j, regex k) {
-  transFunction[i][j]= k;	
+bool GNFA::setTransition (int i, int j, regexNode* k) {
+  transFunction[i][j]->cascadeDel();
+  transFunction[i][j] = k;	
   cout<<"cool"<<endl;
   return true;
 }
@@ -83,7 +58,7 @@ bool GNFA::clearTransition (int i, int j){
 
 
 //function to set a final state
-bool GNFA::setFinalState(int i){
+bool GNFA::setAcceptState(int i){
   if(i <= this->noOfStates){
     acceptStates[i-1] = 1; // i-1 to get the right state
   }
@@ -94,7 +69,7 @@ bool GNFA::setFinalState(int i){
 
 
 //set a function to set a non final state
-bool GNFA::resetFinalState(int i){
+bool GNFA::resetAcceptState(int i){
    if(i <= this->noOfStates){
     acceptStates[i-1] = 0;//i-1 to hit the right state
    }
@@ -147,12 +122,15 @@ void GNFA::displayAlphabet(){
 void GNFA::displayTransitionFunction(){
 	cout<<"This is the transition function:"<<endl;
 	for (int i = 0 ; i < this->noOfStates; i++){
-		for (int j = 0 ; i < this->noOfStates; i++){
-			if(!transFunction[i][j].isNULL()){
+		regex tempRegex;
+		for (int j = 0 ; j < this->noOfStates; j++){
+			tempRegex.pureSetRoot(transFunction[i][j]);
+			if(!tempRegex.isNULL()){
 				cout<< "	Start State :"<<i<<endl;
 				cout<< "	End State :"<<j<<endl;
-				cout<< "	Regular Expresssion :"<<transFunction[i][j]<<endl<<endl<<endl;
+				cout<< "	Regular Expresssion :"<<tempRegex<<endl<<endl<<endl;
 			}
+			
 			
 		}
 	}
@@ -165,7 +143,7 @@ void GNFA::display(){
 	displayStartState();	
 	displayAcceptStates();
 	displayAlphabet();
-//	displayTransitionFunction();	
+	displayTransitionFunction();	
 }
 
 
@@ -173,7 +151,7 @@ void GNFA::display(){
 bool GNFA::isNonDeterministic(){
 	for (int i = 0 ; i < this->noOfStates; i++){
 		for (int j = 0 ; i < this->noOfStates; i++){
-			if(!transFunction[i][j].isUnionTree()){
+			if(!transFunction[i][j]->isUnionTree()){
 				return false;
 			}
 			
@@ -190,7 +168,7 @@ bool GNFA::isDeterministic(){
 	  for (int i = 0 ; i < this->noOfStates; i++){
 			multiSet temp;
 			for (int j = 0 ; i < this->noOfStates; i++){
-				temp = temp + transFunction[i][j].getLeaves();
+				temp = temp + transFunction[i][j]->getLeaves();
 			}
 			
 			if (temp[128]!=0){// this may not be required since later we do a match. 

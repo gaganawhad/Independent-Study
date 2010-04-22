@@ -548,10 +548,17 @@ switch (s[i]) {
 
 
 
-	void regex::setRoot (regexNode * root){
+	bool regex::setRoot (regexNode * root){
 		root->cascadeDel();
 		this->root = root;
+		return true;
 	}
+	
+	bool regex::pureSetRoot(regexNode* root){
+		this->root = root;
+		return true;
+	}
+	
 
 	regexNode * regex::getRoot(){
 		return this->root;

@@ -172,8 +172,10 @@ class regex{
   bool isEmpty();
   bool isLeaf();	
   bool isUnionTree();
-	void setRoot (regexNode * root);	
-  
+  bool setRoot (regexNode * root);	
+  bool pureSetRoot(regexNode* root);
+	
+	
 	void display();	
 	
   alphabet getLeaves();
