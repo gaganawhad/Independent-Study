@@ -17,9 +17,8 @@
 	//This constructor creates a simple GNFA class that has states and has all possible transition functions as null set
 GNFA::GNFA(int n){
 	cout<<"a"<<endl;
-  this->noOfStates = n;
-  //transVector.resize(noOfStates);
-  cout<<"b"<<endl;
+	this->noOfStates = n;
+	cout<<"b"<<endl;
 	transVector temp;
 	for (int i =0; i<noOfStates;i++){
 		regex test;
@@ -31,15 +30,16 @@ GNFA::GNFA(int n){
 		}	
 		transFunction.push_back(temp);
 	}
-	
-/*	this->transFunction.resize(noOfStates);
+	/*
+	this->transFunction.resize(noOfStates);
 	cout<<"c"<<endl;
 	for (int i = 0; i<noOfStates; i++) {
 		cout<<"what?"<<endl;
-//		this->transFunction[i].resize(noOfStates);
+				this->transFunction[i].resize(noOfStates);
 		cout<<"k this is crazy"<<endl;
-	}
+	}*/
 	cout<<"d"<<endl;
+	/*
   //this->acceptStates.resize(noOfStates);
 	cout<<"e"<<endl;
 	for (int i = 0; i<noOfStates; i++) {
@@ -153,6 +153,7 @@ void GNFA::displayTransitionFunction(){
 				cout<< "	End State :"<<j<<endl;
 				cout<< "	Regular Expresssion :"<<transFunction[i][j]<<endl<<endl<<endl;
 			}
+			
 		}
 	}
 	
@@ -203,7 +204,7 @@ bool GNFA::isDeterministic(){
 				return false;
 			}
 			
-			/*check if all */
+			//check if all 
 			
 		}
 		

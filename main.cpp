@@ -237,28 +237,30 @@ int mainGNFA(){
 }
 
 int testSetRoot(){
-	vector<regex> funkyStack;
-	regex reg;
-	regexNode* l = new leafNode(NULLSET);
-	reg.setRoot(l);
-	cout<<reg<<endl;
-	funkyStack.push_back(reg);
-	regexNode* r = new leafNode(NULLSET);
-	reg.setRoot(r);
-	cout<<reg<<endl;
-	funkyStack.push_back(reg);
-	regexNode* s = new leafNode(NULLSET);
-	reg.setRoot(s);
-	cout<<reg<<endl;
-	funkyStack.push_back(reg);
-	regexNode* t = new leafNode(NULLSET);
-	reg.setRoot(t);
-	cout<<reg<<endl;
-	funkyStack.push_back(reg);
-	regexNode* u = new leafNode(NULLSET);
-	reg.setRoot(u);
-	cout<<reg<<endl;
-	funkyStack.push_back(reg);
+	vector<regexNode*> funkyStack;
+	regexNode *reg1 = new leafNode(NULLSET), *reg2 = new leafNode(NULLSET), *reg3 = new leafNode(NULLSET), *reg4 = new leafNode(NULLSET), *reg5 = new leafNode(NULLSET);
+	//regexNode* l = new leafNode(NULLSET);
+	//reg.setRoot(l);
+	reg1->display();
+	funkyStack.push_back(reg1);
+	cout<<funkyStack.size()<<endl;
+	//regexNode* r = new leafNode(NULLSET);
+	//reg.setRoot(r);
+	reg2->display();
+	funkyStack.push_back(reg2);
+	cout<<funkyStack.size()<<endl;
+	//regexNode* s = new leafNode(NULLSET);
+	//reg.setRoot(s);
+	reg3->display();
+	funkyStack.push_back(reg3);
+	//regexNode* t = new leafNode(NULLSET);
+	//reg.setRoot(t);
+	reg4->display();
+	funkyStack.push_back(reg4);
+	//regexNode* u = new leafNode(NULLSET);
+	//reg.setRoot(u);
+	reg5->display();
+	funkyStack.push_back(reg5);
 	
 	
 	return 0;
@@ -281,6 +283,6 @@ int testVector(){
 	
 
 int main (){
-  return testSetRoot();
+  return mainGNFA();
 }
 

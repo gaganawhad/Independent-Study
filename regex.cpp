@@ -84,6 +84,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	/*********************** Unary Regex-Node **************************/
 	bool unaryRegexNode::setLeftChild(regexNode* newLeftChild){
+		leftChild->cascadeDel();
 		leftChild = newLeftChild;
 		return true;
 	}
@@ -114,6 +115,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 	/*********************** Binary Regex-Node **************************/
   
 	bool binaryRegexNode::setRightChild(regexNode* newRightChild){
+		rightChild->cascadeDel();
 		rightChild = newRightChild;
 		return true;
 	}
@@ -127,6 +129,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 	}
 
 	bool binaryRegexNode::setChildren(regexNode* newLeftChild, regexNode* newRightChild){
+		leftChild->cascadeDel();
+		rightChild->cascadeDel();
 		this->leftChild = newLeftChild;
 		this->rightChild = newRightChild;
 		return true;
@@ -216,7 +220,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	/*********************** Star Node **************************/
 	starNode::starNode(){
-		this->leftChild = 0;
+		this->leftChild = new leafNode(NULLSET);
 	}
 	
 	starNode::starNode (regexNode *newleftChild){
@@ -259,8 +263,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 	/*********************** Union Node **************************/
 	unionNode::unionNode(){
-		this->leftChild = 0;
-		this->rightChild = 0;	
+		this->leftChild = new leafNode(NULLSET);
+		this->rightChild = new leafNode(NULLSET);;	
 	}
 	
 	unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
@@ -336,8 +340,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 	/*********************** Concatination Node **************************/
 
 	concatNode::concatNode(){
-		this->leftChild = 0;
-		this->rightChild = 0;
+		this->leftChild = new leafNode(NULLSET);;
+		this->rightChild = new leafNode(NULLSET);;
 	}
 	
 	concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){
@@ -411,7 +415,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 /*********************** Regular Expression  **************************/
   regex::regex (){
-    this->root = 0;
+	
+    this->root = new leafNode(NULLSET);
   }
  
   regex::regex (regexNode * root){	
@@ -544,6 +549,7 @@ switch (s[i]) {
 
 
 	void regex::setRoot (regexNode * root){
+		root->cascadeDel();
 		this->root = root;
 	}
 
