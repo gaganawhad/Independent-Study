@@ -148,13 +148,11 @@ void GNFA::displayAlphabet(){
 void GNFA::displayTransitionFunction(){
 	cout<<"This is the transition function:"<<endl;
 	for (int i = 0 ; i < this->noOfStates; i++){
-		regex tempRegex;
 		for (int j = 0 ; j < this->noOfStates; j++){
-			tempRegex.pureSetRoot(transFunction[i][j]);
-			if(!tempRegex.isNULL()){
+			if(!transFunction[i][j]->isNULL()){
 				cout<< "	Start State :"<<i<<endl;
 				cout<< "	End State :"<<j<<endl;
-				cout<< "	Regular Expresssion :"<<tempRegex<<endl<<endl<<endl;
+				cout<< "	Regular Expresssion :"<<transFunction[i][j]<<endl<<endl<<endl;
 			}
 			
 			
@@ -244,7 +242,8 @@ void GNFA::toRegexp(){
   fooGNFA->display();// to dipsly what the GNFA looks like at the end of this. 
 	
 	//from here the Floyd Warshall algorithm begins
-	regex result(transFunction[0][noOfStates+1]);
+	/*
+	 regex result(transFunction[0][noOfStates+1]);
 	result.simplify();
 	for(int k =1; k < noOfStates + 1; k++){
 		result.setRoot(new unionNode(
@@ -262,6 +261,7 @@ void GNFA::toRegexp(){
 		
 	}
 	cout<<result<<endl;
+	 */
 	//return result here after deciding if pointer should be returned or object
 }
 

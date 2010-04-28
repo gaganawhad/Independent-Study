@@ -414,15 +414,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
 /*********************** Regular Expression  **************************/
-  regex::regex (){
-	
-    this->root = new leafNode(NULLSET);
-  }
  
-  regex::regex (regexNode * root){	
-    this->root = root;
-  }
 
+/*
   regex::regex (const char* s){	// This is the simplest version of the parser. It NEEDs input to be given in brackets... even the outermost level
     regexStack opeStack;
     regexStack treePtrs;
@@ -462,7 +456,12 @@ switch (s[i]) {
           cout<<"there is some error"<<endl;
           break;
 }
-*/
+/this is where the nested comments ended dont forget to comment it again
+ 
+ the following used to work sometime. think about using it
+		  
+		  
+		  
 			
       if ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')) {
         treePtrs.push(new leafNode(s[i])); 
@@ -505,17 +504,10 @@ switch (s[i]) {
        root = treePtrs.pop(); //this is because this will be the child of a higher level 
       }
 
-  regex::~regex(){
-	root->cascadeDel();
-  }
-  
-  bool regex::cascadeDel(){
-	root->cascadeDel();
-	return true;
-	}
+*/   
 
-  bool regex::isNULL(){
-    if (root->isLeaf() && root->getSymbol() == NULLSET){
+  bool regexNode::isNULL(){
+    if (this->isLeaf() && this->getSymbol() == NULLSET){
       return true;
   }
   else {
@@ -523,8 +515,8 @@ switch (s[i]) {
   }
  }
 	
-  bool regex::isEmpty(){
-    if (root->isLeaf() && root->getSymbol() == EPSILON){
+  bool regexNode::isEmpty(){
+    if (this->isLeaf() && this->getSymbol() == EPSILON){
       return true;
     }
     else {
@@ -533,21 +525,12 @@ switch (s[i]) {
   }
 	
 	
-  bool regex::isLeaf(){
-    if (root->isLeaf() ){
-      return true;
-    }
-    else {
-      return false;
-   }
-  }
+ 
 	
-  bool regex::isUnionTree(){
-    return root->isUnionTree();
-  }
 
 
 
+/* these may not be required any more
 	bool regex::setRoot (regexNode * root){
 		root->cascadeDel();
 		this->root = root;
@@ -564,49 +547,36 @@ switch (s[i]) {
 		return this->root;
 	}
 
- 
+ */
 
-		
-  void regex::display(){
-    root->display();
-  }
 	
-	
-  alphabet regex::getLeaves(){
-    return root->getLeaves();
-  }
 
-	void regex::simplify(){
-		root = root->simplify();//
-	}
 
-  regex * regex::operator + (regex * b){
-    regexNode * temp1 = new unionNode (this->root, b->root);
-    regex * temp = new regex(temp1);
+
+  regexNode * regexNode::operator + (regexNode * b){
+    regexNode * temp = new unionNode (this, b);
     return temp;
   }
 	
-  regex * regex::operator * (){
-    regexNode * temp1 = new starNode(this->root);
-    regex * temp = new regex (temp1);
+  regexNode* regexNode::operator * (){
+    regexNode * temp = new starNode(this);
     return temp;
   }
 	
-  regex * regex::operator - (regex * b){
-    regexNode * temp1 = new concatNode (this->root, b->root);
-    regex * temp = new regex (temp1);
+  regexNode * regexNode::operator - (regexNode * b){
+    regexNode * temp = new concatNode (this, b);
     return temp;
   }
 	
 
-ostream& operator << (ostream& s, regex* a){
+ostream& operator << (ostream& s, regexNode* a){
 	
 	a->display();
 	
 	return s;
 }
 
-ostream& operator << (ostream& s, regex& a){
+ostream& operator << (ostream& s, regexNode& a){
 	a.display();
 	return s;
 }

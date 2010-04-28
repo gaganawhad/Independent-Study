@@ -34,7 +34,14 @@ class regexNode{
   //virtual void delTree()=0;
   virtual ~regexNode();
   virtual bool cascadeDel()=0;
-
+	virtual bool isNULL();
+	virtual bool isEmpty();
+	regexNode * operator + (regexNode * b);	
+	regexNode * operator * ();	
+	regexNode * operator - (regexNode * b);
+	friend ostream& operator << (ostream& s, regexNode* a);
+	friend ostream& operator << (ostream& s, regexNode& a);
+	friend istream& operator >> (istream& s, regexNode& a);
 };
 
 
@@ -157,6 +164,7 @@ void display();
 
 
 /*********************** Regular Expression  **************************/
+/*
 class regex{
   private:
   regexNode * root;
@@ -195,14 +203,15 @@ class regex{
 
 
 };
+ */
 
 
 
 
 //void operator << (ostream& s, regex& a);
-ostream& operator << (ostream& s, regex* a);
-ostream& operator << (ostream& s, regex& a);
-istream& operator >> (istream& s, regex& a);
+ostream& operator << (ostream& s, regexNode* a);
+ostream& operator << (ostream& s, regexNode& a);
+istream& operator >> (istream& s, regexNode& a);
 
 
 
