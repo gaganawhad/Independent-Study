@@ -2,7 +2,7 @@
 #include "GNFA.h"
 
 
-
+/*
 int mainAlpha (){
 
 	alphabet a("123dex"), b("abcdef215"), c;
@@ -169,7 +169,7 @@ int simplifyRegex(){
 	regexNode* c = new concatNode;
 	regexNode* s = new starNode;
 	
-/*
+
 	u->setChildren(r,l);
 	u->setChildren(l,r);
 
@@ -182,7 +182,7 @@ int simplifyRegex(){
 	cout<<reg<<endl;
 	delete reg;
 
-*/
+
 	regex* reg = new regex(s);
 	c->setChildren(l,r);
 	s->setLeftChild(c);
@@ -194,7 +194,7 @@ int simplifyRegex(){
 	reg->setRoot(c);
 	reg->display();
 	delete reg;
-	/*
+	
 	reg = new regex ();
 	l = new leafNode(NULLSET);
 	r = new leafNode( 'r');
@@ -203,11 +203,11 @@ int simplifyRegex(){
 	cout<<reg<<endl;
 	reg->simplify();
 	cout<<reg<<endl;
-/*        delete reg;
+       delete reg;
 	u->setChildren(l,r);
 	reg->setRoot(u);
 	cout<<reg<<endl;
-*/	
+*
 	return 0;
 
 };
@@ -264,34 +264,55 @@ int testVector(){
 	}
 	
 }
-	
-int mainGNFA(){
-	regexNode* l = new leafNode(NULLSET);
-	regexNode* r = new leafNode( 'r');
-	regexNode* u = new unionNode;
-	regexNode* c = new concatNode;
-	regexNode* s = new starNode;
+*/
+
+regexNode* newTest(){
+  regexNode* l = new leafNode('c');
+  regexNode* r = new leafNode('2');
+  regexNode* u = new unionNode(l,r);
+  regex* reg1 = new regex(u);
+  return reg1->getRoot();
+}
+
+regexNode* test(){
+  regexNode* l = new leafNode(NULLSET);
+  regexNode* r = new leafNode('r');
+  regexNode* u = new unionNode;
+  regexNode* c = new concatNode;
+  regexNode* s = new starNode;
   u->setChildren(l,r);
   s->setLeftChild(u);
-	regex reg(s);
-	cout<<reg<<endl;
- 
-   GNFA a(5);
+  regex* reg = new regex(s);
+  return reg->getRoot();
+}
+
+int mainGNFA(){
+  GNFA a(5);
   alphabet alpha ("pqrst1234");
-
-	a.setAlphabet(alpha);
-
-  a.setAcceptState(3);
-
-  a.setAcceptState(5);
-  a.setTransition(0,3,reg.getRoot());
-
-	
-	cout<<a;
-	return 0;
+  
+  a.setAlphabet(alpha);
+  a.setAcceptState(2);
+  a.setAcceptState(4);
+  a.display(); 
+ /* 
+  for(int i = 0; i < 5; i++){ 
+    for(int j = 0; j < 5; j++) {
+      a.setTransition(i, j, newTest()->getRoot());
+      cout<<"am here"<<endl;
+      a.display();
+    }
+  }
+*/
+ 
+//  a.clearTransition(0,4);
+  a.setTransition(0, 0, newTest());
+//  a.display();
+//  a.setTransition(0, 1, newTest());
+  a.display();
+  return 0;
 }
 
 int main (){
-  return mainGNFA();
+   return mainGNFA();
 }
 

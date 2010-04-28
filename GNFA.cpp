@@ -28,6 +28,9 @@ GNFA::GNFA(int n){
 		}	
 		transFunction.push_back(temp);
 	}
+  cout<<"this is 0 4 on creation";
+  transFunction[0][4]->display();
+  cout<<endl;
 
 }
 	
@@ -39,8 +42,17 @@ GNFA::GNFA(int n){
 
 //functions take two states and regular expression and then set the transiontion function
 bool GNFA::setTransition (int i, int j, regexNode* k) {
+  cout<<"this is 0 4 right now:";
+  transFunction[0][4]->display();
+  cout<<endl;
   transFunction[i][j]->cascadeDel();
+  cout<<"this is 0 4 right now:";
+  transFunction[0][4]->display();
+  cout<<endl;
   transFunction[i][j] = k;	
+  cout<<"this is 0 4 right now:";
+  transFunction[0][4]->display();
+  cout<<endl;
   cout<<"cool"<<endl;
   return true;
 }
@@ -49,7 +61,8 @@ bool GNFA::setTransition (int i, int j, regexNode* k) {
 
 
 bool GNFA::clearTransition (int i, int j){
-	//transFunction[i][j] = NULL; //find a way to make this null appropriately. 
+	transFunction[i][j]->cascadeDel();
+        transFunction[i][j]= new leafNode(NULLSET); //find a way to make this null appropriately. 
 	return true;
 }
 	
@@ -59,10 +72,23 @@ bool GNFA::clearTransition (int i, int j){
 
 //function to set a final state
 bool GNFA::setAcceptState(int i){
-  if(i <= this->noOfStates){
-    acceptStates[i-1] = 1; // i-1 to get the right state
+  cout<<"this is 0 4 on creation";
+  transFunction[0][4]->display();
+  cout<<endl;
+  if(i < this->noOfStates){
+    acceptStates[i] = 1; // i-1 to get the right state
   }
   return true;
+}
+
+
+bool GNFA::isAcceptState(int i){
+  if(acceptStates[i]==1){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 	
 
@@ -70,8 +96,8 @@ bool GNFA::setAcceptState(int i){
 
 //set a function to set a non final state
 bool GNFA::resetAcceptState(int i){
-   if(i <= this->noOfStates){
-    acceptStates[i-1] = 0;//i-1 to hit the right state
+   if(i < this->noOfStates){
+    acceptStates[i] = 0;//i-1 to hit the right state
    }
 	return true;
 }
@@ -94,7 +120,7 @@ bool GNFA::setAlphabet(alphabet my_alphabet){
 
 void GNFA::displayStates() {
 	cout<<"# States: ";
-	for(int i=1; i<=noOfStates; i++){
+	for(int i=0; i< noOfStates; i++){
 		cout<<i<<", ";
 	}
 	cout<<endl;
@@ -108,7 +134,7 @@ void GNFA::displayAcceptStates(){
 	cout<<"Accept States: ";
 	for(int i=0; i < noOfStates; i++){
 		if(acceptStates[i]){
-			cout<<i+1<<", "; //to have the states starting from 1
+			cout<<i<<", "; //states are numbered from 0
 		}
 	}
 	cout<<endl;
@@ -194,6 +220,28 @@ bool GNFA::isDeterministic(){
 		return false;
 	}
 	
+}
+
+alphabet GNFA::getAlphabet(){
+  return this->sigma;
+}
+
+void GNFA::toRegexp(){
+  GNFA* fooGNFA = new GNFA(this->noOfStates + 2);
+  fooGNFA->setAcceptState(this->noOfStates + 1);
+  fooGNFA->setAlphabet(this->getAlphabet());
+  fooGNFA->setTransition(0, 1, new leafNode(EPSILON));
+  for(int i=0; i<noOfStates; i++){
+    for(int j=0; j<noOfStates;j++){
+      fooGNFA->setTransition(i+1, j+1, this->transFunction[i][j]);
+      
+    }
+    if(this->isAcceptState(i)){
+      fooGNFA->setTransition(i, noOfStates+1, new leafNode(EPSILON));
+    }
+  }
+  delete this;
+  fooGNFA->display();
 }
 
 /*
