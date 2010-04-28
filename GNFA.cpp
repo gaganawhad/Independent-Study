@@ -241,7 +241,28 @@ void GNFA::toRegexp(){
     }
   }
   delete this;
-  fooGNFA->display();
+  fooGNFA->display();// to dipsly what the GNFA looks like at the end of this. 
+	
+	//from here the Floyd Warshall algorithm begins
+	regex result(transFunction[0][noOfStates+1]);
+	result.simplify();
+	for(int k =1; k < noOfStates + 1; k++){
+		result.setRoot(new unionNode(
+																 result.getRoot(),
+																 new concatNode(
+																								fooGNFA->transFunction[k][noOfStates+1] , 
+																								new concatNode (
+																																fooGNFA->transFunction[0][k],
+																																new starNode(fooGNFA->transFunction[k][k])
+																																)
+																								)
+																 )
+									 );
+		result.simplify();
+		
+	}
+	cout<<result<<endl;
+	//return result here after deciding if pointer should be returned or object
 }
 
 /*
