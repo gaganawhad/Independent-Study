@@ -262,7 +262,7 @@ regexNode * GNFA::toRegexp(){
 	cout<<"J"<<endl;
 	cout<<"and result is :"<<result<<endl;
 	for(int k =1; k < noOfStates + 1; k++){
-		result = *result + *(*fooGNFA->transFunction[0][k] - *(*(new starNode(fooGNFA->transFunction[k][k])) - *fooGNFA->transFunction[k][noOfStates +1]));
+		result = *result + *(*fooGNFA->transFunction[0][k] - *(*((*fooGNFA->transFunction[k][k])++) - *fooGNFA->transFunction[k][noOfStates +1]));
 		cout<<"k is :"<<k<<"and result is :"<<result<<endl;
 		result = result->simplify();
 		cout<<"k is :"<<k<<"and result is :"<<result<<endl;
@@ -275,7 +275,7 @@ regexNode * GNFA::toRegexp(){
 	 
 	//return result here after deciding if pointer should be returned or object
 	
-/* carl sturtivant suggested the following method. argue with him the next time whether it is the best. 
+/* carl sturtivant suggested the following method. argue with him the next time whether it is the best.  
 	for(int k = 0; k < noOfStates; k++){ 
 	cout<<"came here"<<endl;
 		for (int i = 0; i < noOfStates; i++){
