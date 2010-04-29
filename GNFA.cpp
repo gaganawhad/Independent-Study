@@ -20,10 +20,11 @@ GNFA::GNFA(int n){
 	this->acceptStates.resize(noOfStates);
 	
 	
-	transVector temp;
-	for (int i =0; i<noOfStates;i++){
-		for (int j = 0; j<noOfStates; j++){
-			cout<<i<<j<<endl;
+	
+	for (int i =0; i< noOfStates; i++){
+		transVector temp;
+		for (int j = 0; j< noOfStates; j++){
+			//cout<<i<<j<<endl;
 			temp.push_back(new leafNode(NULLSET));
 		}	
 		transFunction.push_back(temp);
@@ -38,22 +39,14 @@ GNFA::GNFA(int n){
 // Here do you want to create another constructor in which the argument n the number of states and a state of functions is given?
 	
 	
-
+bool GNFA::deleteTransition(int i, int j){
+	transFunction[i][j]->cascadeDel();
+	return true;
+}
 
 //functions take two states and regular expression and then set the transiontion function
 bool GNFA::setTransition (int i, int j, regexNode* k) {
-  cout<<"this is 0 4 right now:";
-  transFunction[0][4]->display();
-  cout<<endl;
-  transFunction[i][j]->cascadeDel();
-  cout<<"this is 0 4 right now:";
-  transFunction[0][4]->display();
-  cout<<endl;
-  transFunction[i][j] = k;	
-  cout<<"this is 0 4 right now:";
-  transFunction[0][4]->display();
-  cout<<endl;
-  cout<<"cool"<<endl;
+	transFunction[i][j] = k;	
   return true;
 }
 	
@@ -72,13 +65,15 @@ bool GNFA::clearTransition (int i, int j){
 
 //function to set a final state
 bool GNFA::setAcceptState(int i){
-  cout<<"this is 0 4 on creation";
-  transFunction[0][4]->display();
-  cout<<endl;
-  if(i < this->noOfStates){
+	if(i < this->noOfStates){
     acceptStates[i] = 1; // i-1 to get the right state
+		return true;
   }
-  return true;
+	else{
+		cout<<"Incorrect accpet state"<<endl;
+		return false;
+	}
+  
 }
 
 
@@ -127,7 +122,7 @@ void GNFA::displayStates() {
 }
 
 void GNFA::displayStartState(){
-	cout<<"Start State: 1"<<endl;
+	cout<<"Start State: 0"<<endl;
 }
 
 void GNFA::displayAcceptStates(){
@@ -161,6 +156,15 @@ void GNFA::displayTransitionFunction(){
 	
 }
 
+void GNFA::forceDisplayTransitionFunction(){
+	for (int i =0; i< noOfStates; i++){
+		for (int j =0 ; j < noOfStates; j++){
+			cout<<i<<j<<" "<<transFunction[i][j]<<endl;
+		}
+	}
+	
+	
+}
  
 void GNFA::display(){
 	displayStates();
@@ -224,12 +228,19 @@ alphabet GNFA::getAlphabet(){
   return this->sigma;
 }
 
-void GNFA::toRegexp(){
-  GNFA* fooGNFA = new GNFA(this->noOfStates + 2);
-  fooGNFA->setAcceptState(this->noOfStates + 1);
+regexNode * GNFA::toRegexp(){
+  cout<<"A"<<endl;
+	GNFA* fooGNFA = new GNFA(this->noOfStates + 2);
+  cout<<"B"<<endl;
+	fooGNFA->setAcceptState(this->noOfStates + 1);
+	cout<<"C"<<endl;
   fooGNFA->setAlphabet(this->getAlphabet());
+	cout<<"D"<<endl;
   fooGNFA->setTransition(0, 1, new leafNode(EPSILON));
-  for(int i=0; i<noOfStates; i++){
+	cout<<"E"<<endl;
+  
+	
+	for(int i=0; i<noOfStates; i++){
     for(int j=0; j<noOfStates;j++){
       fooGNFA->setTransition(i+1, j+1, this->transFunction[i][j]);
       
@@ -238,32 +249,69 @@ void GNFA::toRegexp(){
       fooGNFA->setTransition(i, noOfStates+1, new leafNode(EPSILON));
     }
   }
-  delete this;
-  fooGNFA->display();// to dipsly what the GNFA looks like at the end of this. 
-	
+	cout<<"F"<<endl;
+  
+	cout<<"G"<<endl;
+  cout<<*fooGNFA<<endl;// to dipsly what the GNFA looks like at the end of this. 
+	cout<<"H"<<endl;
 	//from here the Floyd Warshall algorithm begins
-	/*
-	 regex result(transFunction[0][noOfStates+1]);
-	result.simplify();
+	
+	regexNode * result = fooGNFA->transFunction[0][noOfStates+1];
+	cout<<"I"<<endl;
+	result->simplify();
+	cout<<"J"<<endl;
+	cout<<"and result is :"<<result<<endl;
 	for(int k =1; k < noOfStates + 1; k++){
-		result.setRoot(new unionNode(
-																 result.getRoot(),
-																 new concatNode(
-																								fooGNFA->transFunction[k][noOfStates+1] , 
-																								new concatNode (
-																																fooGNFA->transFunction[0][k],
-																																new starNode(fooGNFA->transFunction[k][k])
-																																)
-																								)
-																 )
-									 );
-		result.simplify();
-		
+		result = *result + *(*fooGNFA->transFunction[0][k] - *(*(new starNode(fooGNFA->transFunction[k][k])) - *fooGNFA->transFunction[k][noOfStates +1]));
+		cout<<"k is :"<<k<<"and result is :"<<result<<endl;
+		result = result->simplify();
+		cout<<"k is :"<<k<<"and result is :"<<result<<endl;
 	}
+	cout<<"K"<<endl;
 	cout<<result<<endl;
-	 */
+	delete fooGNFA;
+	// shoudl i do a delete this??
+	return result;
+	 
 	//return result here after deciding if pointer should be returned or object
+	
+/* carl sturtivant suggested the following method. argue with him the next time whether it is the best. 
+	for(int k = 0; k < noOfStates; k++){ 
+	cout<<"came here"<<endl;
+		for (int i = 0; i < noOfStates; i++){
+			for (int j = 0; k < noOfStates; j++){
+				transFunction[i][j] = *transFunction[i][j] + *(*transFunction[i][k] - *(*(new starNode(transFunction[k][k])) - *transFunction[k][j]));
+				transFunction[i][j]->simplify();
+			}
+			 
+		}
+	}
+		regexNode * result = new leafNode(NULLSET);
+	
+	for(int k = 0; k < noOfStates; k++) {
+		if (isAcceptState(k)){
+			result = *result + *transFunction[0][k];
+		}
+				
+		result->simplify();
+	}
+	delete this;			
+	return result;
+*/
+			
+
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 ostream& operator << (ostream& s, GNFA& a){

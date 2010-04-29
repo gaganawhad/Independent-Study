@@ -32,23 +32,24 @@ public:
 
   GNFA(int n);
   bool setTransition (int i, int j, regexNode* k);
-  bool clearTransition (int i, int j);
+  bool deleteTransition(int i, int j);
+	bool clearTransition (int i, int j);
   bool setAcceptState(int i);// remember states are numbered 0 to n-1
   bool isAcceptState(int i);
   bool resetAcceptState(int i);
   bool setAlphabet(char* temp);
   bool setAlphabet(alphabet);
   alphabet getAlphabet();
-  void GNFA::displayStates();
-  void GNFA::displayStartState();	
-  void GNFA::displayAcceptStates();
-  void GNFA::displayAlphabet();
-  void GNFA::displayTransitionFunction();	
-  void GNFA::display();	
+  void displayStates();
+  void displayStartState();	
+  void displayAcceptStates();
+  void displayAlphabet();
+  void displayTransitionFunction();
+	void forceDisplayTransitionFunction();
+  void display();	
   bool isDeterministic();
-  //multiSet* testfun();
   bool isNonDeterministic();
-  void toRegexp();
+  regexNode * toRegexp();
 	//friend void operator << (ostream&, GNFA& );
 	friend ostream& operator << (ostream&, GNFA& );
 	friend istream& operator >> (istream& , GNFA& );

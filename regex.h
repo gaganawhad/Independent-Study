@@ -29,16 +29,16 @@ class regexNode{
 	virtual char getSymbol();
 	virtual alphabet getLeaves() =0; //returns the leaves of the tree in the form of a stringstream
 
-	
+	virtual void type();
 	virtual regexNode * simplify() =0; // virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
   //virtual void delTree()=0;
   virtual ~regexNode();
-  virtual bool cascadeDel()=0;
+  virtual bool cascadeDel();
 	virtual bool isNULL();
 	virtual bool isEmpty();
-	regexNode * operator + (regexNode * b);	
-	regexNode * operator * ();	
-	regexNode * operator - (regexNode * b);
+	regexNode * operator + (regexNode&  b);	
+	regexNode * operator ++ (int);//using int to indicate that it is post fix operator and not prefix	
+	regexNode * operator - (regexNode&  b);
 	friend ostream& operator << (ostream& s, regexNode* a);
 	friend ostream& operator << (ostream& s, regexNode& a);
 	friend istream& operator >> (istream& s, regexNode& a);
@@ -48,15 +48,16 @@ class regexNode{
 /*********************** Unary Regex Node **************************/
 class unaryRegexNode: public regexNode{
 	protected:
-	bool cascadeDel();
+	
 
 	regexNode* leftChild;
 
 	public:
 	bool setLeftChild(regexNode *);
 	regexNode * getLeftChild();
-	
+	bool cascadeDel();
 	alphabet getLeaves();
+	void type();
     //    void delTree();
 };
 
@@ -76,7 +77,7 @@ class binaryRegexNode: public unaryRegexNode{
 	bool setChildren(regexNode* , regexNode* );
 		
 	alphabet getLeaves();
-	
+	void type();
 };
 
 
@@ -100,6 +101,7 @@ class leafNode: public regexNode {
 	bool cascadeDel();
   alphabet getLeaves();
 	regexNode* simplify();
+	void type();
 };
 
 
@@ -118,7 +120,7 @@ void display();
 
 
 
-
+void type();
 	regexNode* simplify(); 
  
 };
@@ -139,7 +141,7 @@ class unionNode: public binaryRegexNode{
  
 
   regexNode* simplify();
- 
+ void type();
 };
 
 
@@ -156,7 +158,7 @@ void display();
   
 	regexNode* simplify();
     
-  
+  void type();
 
 
 };

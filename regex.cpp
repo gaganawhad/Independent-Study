@@ -76,6 +76,13 @@ it tires to implement the simple rule,  null set U 'r' = r
 	bool regexNode::setChildren(regexNode* , regexNode*){
 		return 0;
 	}
+	bool regexNode::cascadeDel(){
+		return false;
+	}
+	
+	void regexNode::type(){
+		cout<<"Type is: regexNode"<<endl;
+	}
 
         regexNode::~regexNode(){}
 
@@ -109,8 +116,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 			return true;
         }
 
-
-
+	void unaryRegexNode::type(){
+		cout<<"Type is: unaryRegexNode"<<endl;
+	}
 
 	/*********************** Binary Regex-Node **************************/
   
@@ -147,7 +155,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
-
+	void binaryRegexNode::type(){
+		cout<<"Type is: binaryRegexNode"<<endl;
+	}
 
 
 
@@ -203,6 +213,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
 	regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
+		this->type();
 		return this;
 
 	}
@@ -212,7 +223,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 		return true;
 	}
 
-  
+	void leafNode::type(){
+		cout<<"Type is: leafNode"<<endl;
+	}
  
 
 	
@@ -233,9 +246,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 	}
 
 	void starNode::display(){
-		cout<<"(";
+		cout<<" (";
 		leftChild->display();
-		cout<<")*";
+		cout<<")* ";
 	}
 
 	
@@ -243,7 +256,8 @@ it tires to implement the simple rule,  null set U 'r' = r
 	
 
 
-  regexNode* starNode::simplify(){ 
+  regexNode* starNode::simplify(){
+	  this->type();
 	  leftChild = leftChild->simplify();
 	  if(leftChild->isLeaf()){
 		  
@@ -258,7 +272,9 @@ it tires to implement the simple rule,  null set U 'r' = r
 	  return this;
   }
 
-
+	void starNode::type(){
+		cout<<"Type is: starRegexNode"<<endl;
+	}
 
 
 	/*********************** Union Node **************************/
@@ -292,11 +308,11 @@ it tires to implement the simple rule,  null set U 'r' = r
 	}
 
 	void unionNode::display(){
-		cout<<"(";
+		cout<<" (";
 		leftChild->display();
 		cout<<"U";
 		rightChild->display();
-		cout<<")";
+		cout<<") ";
 	}
 
 
@@ -308,6 +324,7 @@ it tires to implement the simple rule,  null set U 'r' = r
 	
 			
   regexNode* unionNode::simplify(){
+	  this->type();
     leftChild = leftChild->simplify();
     rightChild = rightChild->simplify();
       if(leftChild->isLeaf() && rightChild->isLeaf()){
@@ -334,6 +351,10 @@ it tires to implement the simple rule,  null set U 'r' = r
    }
 	
 
+	void unionNode::type(){
+		cout<<"Type is: unionNode"<<endl;
+	}
+
 
 
 
@@ -355,16 +376,17 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
   void concatNode::display(){
-	cout<<"(";
+	cout<<" (";
     leftChild->display();
     cout<<".";
     rightChild->display();
-    cout<<")";
+    cout<<") ";
   }
 	
 
 
   regexNode* concatNode::simplify(){   
+	  this->type();
 	  leftChild = leftChild->simplify();
 	  rightChild = rightChild->simplify();
       if(leftChild->isLeaf() && rightChild->isLeaf()){
@@ -408,6 +430,10 @@ it tires to implement the simple rule,  null set U 'r' = r
 
 
 
+
+	void concatNode::type(){
+		cout<<"Type is: concatNode"<<endl;
+	}
 
 
 
@@ -553,18 +579,18 @@ switch (s[i]) {
 
 
 
-  regexNode * regexNode::operator + (regexNode * b){
-    regexNode * temp = new unionNode (this, b);
+  regexNode * regexNode::operator + (regexNode&  b){
+    regexNode * temp = new unionNode (this, &b);
     return temp;
   }
 	
-  regexNode* regexNode::operator * (){
+  regexNode* regexNode::operator ++ (int){
     regexNode * temp = new starNode(this);
     return temp;
   }
 	
-  regexNode * regexNode::operator - (regexNode * b){
-    regexNode * temp = new concatNode (this, b);
+  regexNode * regexNode::operator - (regexNode& b){
+    regexNode * temp = new concatNode (this, &b);
     return temp;
   }
 	
