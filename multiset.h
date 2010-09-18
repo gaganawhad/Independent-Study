@@ -12,9 +12,9 @@ class multiSet{
 	bool reset();
 	void display();
     int& operator [] (char);
-	multiSet multiSet:: operator + (alphabet);
-	multiSet multiSet:: operator + (multiSet);
-	bool multiSet:: operator == (multiSet );
+	multiSet operator + (alphabet);
+	multiSet operator + (multiSet);
+	bool operator == (multiSet );
 	friend ostream& operator << (ostream& , multiSet& );
 	friend istream& operator >> (istream& , multiSet& );
 };
