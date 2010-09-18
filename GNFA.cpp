@@ -51,9 +51,9 @@ bool GNFA::deleteTransition(int i, int j){
 
 
 bool GNFA::clearTransition (int i, int j){
-	transFunction[i][j]->cascadeDel();
-        transFunction[i][j]= new leafNode(NULLSET); //find a way to make this null appropriately. 
-	return true;
+  transFunction[i][j]->cascadeDel();
+  transFunction[i][j]= new leafNode(NULLSET); //find a way to make this null appropriately. 
+  return true;
 }
 	
 
