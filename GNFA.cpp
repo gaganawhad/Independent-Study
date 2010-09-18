@@ -39,8 +39,14 @@ GNFA::GNFA(int n){
 
 //Take two states and regular expression and then set the transiontion function
 bool GNFA::setTransition (int i, int j, regexNode* k) {
-  transFunction[i][j] = k;	
-  return true;
+  if (i < this->noOfStates && j < this->noOfStates){
+    transFunction[i][j] = k;	
+    return true;
+  }
+  else {
+    cout<<"Either one or both of the states are not in the rage"<<endl;
+    return false;
+  }
 }
 
 // Here do you want to create another constructor in which the argument n the number of states and a state of functions is given?
@@ -166,7 +172,6 @@ void GNFA::displayTransitionFunction(){
       }
     }
   }
-	
 }
 
 
