@@ -172,13 +172,11 @@ void GNFA::displayTransitionFunction(){
 
 //This function is a not very neat way to displaying the Transition Function. It shows also the NULL sets
 void GNFA::forceDisplayTransitionFunction(){
-	for (int i =0; i< noOfStates; i++){
-		for (int j =0 ; j < noOfStates; j++){
-			cout<<i<<j<<" "<<transFunction[i][j]<<endl;
-		}
-	}
-	
-	
+  for (int i =0; i< noOfStates; i++){
+    for (int j =0 ; j < noOfStates; j++){
+            cout<<i<<j<<" "<<transFunction[i][j]<<endl;
+    }
+  }
 }
 
 
