@@ -31,7 +31,6 @@ class GNFA {
 
     //Transition Functions
     bool setTransition (int i, int j, regexNode* k);
-    bool deleteTransition(int i, int j);
     bool clearTransition (int i, int j);
 
     //Functions for States
@@ -61,6 +60,11 @@ class GNFA {
     //Friend void operator << (ostream&, GNFA& );
     friend ostream& operator << (ostream&, GNFA& );
     friend istream& operator >> (istream& , GNFA& );
+
+
+  private:
+    bool deleteTransition(int i, int j);
+    
 };
 
 //void operator << (ostream&, GNFA& );
