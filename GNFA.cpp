@@ -40,6 +40,7 @@ GNFA::GNFA(int n){
 //Take two states and regular expression and then set the transiontion function
 bool GNFA::setTransition (int i, int j, regexNode* k) {
   if (i < this->noOfStates && j < this->noOfStates){
+    deleteTransition(i,j);
     transFunction[i][j] = k;	
     return true;
   }
