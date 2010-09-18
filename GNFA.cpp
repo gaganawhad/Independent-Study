@@ -71,7 +71,7 @@ bool GNFA::setAcceptState(int i){
     return true;
   }
   else {
-    cout<<"Accept state out of range. States are from State 0 to State "<<noOfStates-1<<endl;
+    cout<<"State out of range. States are from State 0 to State "<<noOfStates-1<<endl;
     return false;
   }
 }
@@ -95,8 +95,12 @@ bool GNFA::isAcceptState(int i){
 bool GNFA::resetAcceptState(int i){
   if(i < this->noOfStates){
     acceptStates[i] = 0;
+    return true;
   }
-  return true;
+  else {
+    cout<<"State out of range. States are from State 0 to State "<<noOfStates-1<<endl;
+    return false;
+  }
 }
 	
 
