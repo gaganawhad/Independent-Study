@@ -15,50 +15,64 @@ using namespace std;
 class regexNode{
 	
   public:
-  virtual bool isLeaf() ;// should these functions be virtual or not?
-  virtual bool isStar() ;
+
+  //Test functions
+  virtual bool isLeaf();
+  virtual bool isStar();
   virtual bool isUnion();
   virtual bool isConcat() ;
-  virtual bool isUnionTree(); //function that tests if all of the tree has only union nodes or leaf nodes
-	virtual bool setLeftChild(regexNode* );
-	virtual regexNode* getLeftChild();
-	virtual bool setRightChild(regexNode*);
-	virtual regexNode* getRightChild();
-	virtual bool setChildren(regexNode*, regexNode*);
-	virtual void display() =0; 
-	virtual char getSymbol();
-	virtual alphabet getLeaves() =0; //returns the leaves of the tree in the form of a stringstream
+  virtual bool isUnionTree();//Checks the tree starting from this node is UnionTree. UnionTree is one in which if there is any operation each is a Union 
+  virtual bool isNULL();
+  virtual bool isEmpty();
 
-	virtual void type();
-	virtual regexNode * simplify() =0; // virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
-  //virtual void delTree()=0;
+  //Getters and Setters for Children and others
+  virtual bool setLeftChild(regexNode* );
+  virtual regexNode* getLeftChild();
+  virtual bool setRightChild(regexNode*);
+  virtual regexNode* getRightChild();
+  virtual bool setChildren(regexNode*, regexNode*);
+  virtual char getSymbol();
+  virtual alphabet getLeaves() =0; //Returns the leaves of the tree in the form of a stringstream
+
+  //Display
+  virtual void display() =0; 
+  virtual void type();
+
+
+  //Operators
+  virtual regexNode * simplify() =0; // virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
+  regexNode * operator + (regexNode&  b);	
+  regexNode * operator ++ (int);//The int is used to indicate that the operator is postfix.
+  regexNode * operator - (regexNode&  b);
+  friend ostream& operator << (ostream& s, regexNode* a);
+  friend ostream& operator << (ostream& s, regexNode& a);
+  friend istream& operator >> (istream& s, regexNode& a);
+
+
+  //Delete functions 
   virtual ~regexNode();
   virtual bool cascadeDel();
-	virtual bool isNULL();
-	virtual bool isEmpty();
-	regexNode * operator + (regexNode&  b);	
-	regexNode * operator ++ (int);//using int to indicate that it is post fix operator and not prefix	
-	regexNode * operator - (regexNode&  b);
-	friend ostream& operator << (ostream& s, regexNode* a);
-	friend ostream& operator << (ostream& s, regexNode& a);
-	friend istream& operator >> (istream& s, regexNode& a);
+  //virtual void delTree()=0;
 };
 
 
 /*********************** Unary Regex Node **************************/
 class unaryRegexNode: public regexNode{
-	protected:
-	
 
-	regexNode* leftChild;
+  protected:
 
-	public:
-	bool setLeftChild(regexNode *);
-	regexNode * getLeftChild();
-	bool cascadeDel();
-	alphabet getLeaves();
-	void type();
-    //    void delTree();
+  regexNode* leftChild;
+  
+  public:
+
+  bool setLeftChild(regexNode *);
+  regexNode * getLeftChild();
+
+  alphabet getLeaves();
+  void type();
+
+  bool cascadeDel();
+//void delTree();
 };
 
 
@@ -66,18 +80,17 @@ class unaryRegexNode: public regexNode{
 
 /*********************** Binary Regex Node **************************/
 class binaryRegexNode: public unaryRegexNode{
-	protected:
-        bool cascadeDel();
+  protected:
+  bool cascadeDel();
+  regexNode* rightChild;
 
-        regexNode* rightChild;
-    
-	public:
-	bool setRightChild(regexNode *) ;  
-	regexNode * getRightChild();
-	bool setChildren(regexNode* , regexNode* );
-		
-	alphabet getLeaves();
-	void type();
+  public:
+  bool setRightChild(regexNode *) ;  
+  regexNode * getRightChild();
+  bool setChildren(regexNode* , regexNode* );
+          
+  alphabet getLeaves();
+  void type();
 };
 
 
@@ -93,15 +106,18 @@ class leafNode: public regexNode {
   leafNode();
   leafNode(char );
 
-	bool isLeaf();
-	bool isUnionTree();
+  bool isLeaf();
+  bool isUnionTree();
 		
-	void display();
   char getSymbol();
-	bool cascadeDel();
   alphabet getLeaves();
-	regexNode* simplify();
-	void type();
+  
+  void display();
+  void type();
+
+  regexNode* simplify();
+
+  bool cascadeDel();
 };
 
 
@@ -114,14 +130,12 @@ class starNode: public unaryRegexNode{
   starNode();
   starNode (regexNode *);
   
-  
   bool isStar();
-void display();	
+  
+  void display();	
+  void type();
 
-
-
-void type();
-	regexNode* simplify(); 
+  regexNode* simplify(); 
  
 };
 
@@ -129,91 +143,44 @@ void type();
 
 /*********************** Union Node  **************************/
 class unionNode: public binaryRegexNode{
+
   public:
 
   unionNode();
   unionNode( regexNode * leftChild, regexNode * rightChild);	
 
-	bool isUnion();
-	bool isUnionTree();
+  bool isUnion();
+  bool isUnionTree();
 	
   void display();
+  void type();
  
 
   regexNode* simplify();
- void type();
 };
 
 
 
 /*********************** Concatination Node  **************************/
 class concatNode: public binaryRegexNode{
+
   public:
 
   concatNode();
   concatNode(regexNode * leftChild, regexNode * rightChild);
 
   bool isConcat();
-void display();
   
-	regexNode* simplify();
-    
+  void display();
   void type();
 
-
+  regexNode* simplify();
+    
 };
-
-
-
-/*********************** Regular Expression  **************************/
-/*
-class regex{
-  private:
-  regexNode * root;
-	
-  public:
-	
-  regex ();
-  regex (regexNode * );	
-  regex (const char* s);	
-  ~regex();
-	bool cascadeDel();
-  bool isNULL();
-  bool isEmpty();
-  bool isLeaf();	
-  bool isUnionTree();
-  bool setRoot (regexNode * root);	
-  bool pureSetRoot(regexNode* root);
-	
-	
-	void display();	
-	
-  alphabet getLeaves();
-
-	regexNode * getRoot();  void simplify();	
-
-  regex * operator + (regex * b);	
-  regex * operator * ();	
-  regex * operator - (regex * b);	
-	
-        
-	
-	//friend void operator << (ostream& s, regex& a);
-	friend ostream& operator << (ostream& s, regex* a);
-	friend ostream& operator << (ostream& s, regex& a);
-	friend istream& operator >> (istream& s, regex& a);
-
-
-};
- */
-
-
 
 
 //void operator << (ostream& s, regex& a);
 ostream& operator << (ostream& s, regexNode* a);
 ostream& operator << (ostream& s, regexNode& a);
 istream& operator >> (istream& s, regexNode& a);
-
-
 
