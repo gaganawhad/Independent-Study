@@ -58,12 +58,13 @@ class regexNode{
 
 /*********************** Unary Regex Node **************************/
 class unaryRegexNode: public regexNode{
-
   protected:
 
   regexNode* leftChild;
   
   public:
+  unaryRegexNode();
+  unaryRegexNode(regexNode *);
 
   bool setLeftChild(regexNode *);
   regexNode * getLeftChild();
@@ -71,6 +72,7 @@ class unaryRegexNode: public regexNode{
   alphabet getLeaves();
   void type();
 
+  virtual ~unaryRegexNode();
   bool cascadeDel();
 //void delTree();
 };
@@ -85,12 +87,16 @@ class binaryRegexNode: public unaryRegexNode{
   regexNode* rightChild;
 
   public:
+  binaryRegexNode();
+  binaryRegexNode( regexNode *, regexNode * );	
   bool setRightChild(regexNode *) ;  
   regexNode * getRightChild();
   bool setChildren(regexNode* , regexNode* );
           
   alphabet getLeaves();
   void type();
+
+  virtual ~binaryRegexNode();
 };
 
 

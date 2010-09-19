@@ -116,7 +116,9 @@ regexNode * regexNode::operator - (regexNode& b){
   return temp;
 }
 
-regexNode::~regexNode(){}
+regexNode::~regexNode(){
+  cout<<"destructor of regexNode called"<<endl;
+}
 
 bool regexNode::cascadeDel(){
   return false;
@@ -130,6 +132,14 @@ bool regexNode::cascadeDel(){
 
 
 /*********************** Unary Regex-Node **************************/
+unaryRegexNode::unaryRegexNode(){
+  this->leftChild = new leafNode(NULLSET);
+}
+
+unaryRegexNode::unaryRegexNode(regexNode *newleftChild){
+  this->leftChild = newleftChild;
+}
+
 bool unaryRegexNode::setLeftChild(regexNode* newLeftChild){
   leftChild->cascadeDel();
   leftChild = newLeftChild;
@@ -147,6 +157,10 @@ alphabet unaryRegexNode::getLeaves(){
 
 void unaryRegexNode::type(){
   cout<<"Type is: unaryRegexNode"<<endl;
+}
+
+unaryRegexNode::~unaryRegexNode(){
+  delete leftChild;
 }
 
 bool unaryRegexNode::cascadeDel(){
@@ -169,6 +183,18 @@ bool unaryRegexNode::cascadeDel(){
 
 
 /*********************** Binary Regex-Node **************************/
+binaryRegexNode::binaryRegexNode(){
+  cout<<"I am in binaryRegexNode constructor"<<endl;
+  this->leftChild = new leafNode(NULLSET);
+  this->rightChild = new leafNode(NULLSET);
+}
+
+binaryRegexNode::binaryRegexNode( regexNode * leftChild, regexNode * rightChild){
+  cout<<"I am in binaryRegexNode constructor"<<endl;
+  this->leftChild = leftChild;
+  this->rightChild = rightChild;
+}
+
 bool binaryRegexNode::setRightChild(regexNode* newRightChild){
   rightChild->cascadeDel();
   rightChild = newRightChild;
@@ -209,6 +235,10 @@ bool binaryRegexNode::cascadeDel(){
 }
 
 
+binaryRegexNode::~binaryRegexNode(){
+  delete leftChild;
+  delete rightChild;
+}
 
 /*********************** Leaf Node **************************/
 leafNode::leafNode(){
@@ -281,11 +311,9 @@ bool leafNode::cascadeDel(){
 
 /*********************** Star Node **************************/
 starNode::starNode(){
-  this->leftChild = new leafNode(NULLSET);
 }
 
-starNode::starNode (regexNode *newleftChild){
-  this->leftChild = newleftChild;
+starNode::starNode(regexNode *newleftChild){
 }
 
 
@@ -326,13 +354,11 @@ regexNode* starNode::simplify(){
 
 /*********************** Union Node **************************/
 unionNode::unionNode(){
-  this->leftChild = new leafNode(NULLSET);
-  this->rightChild = new leafNode(NULLSET);
+  //  cout<<"I am in unionRegexNode constructor"<<endl;
 }
 
 unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
-  this->leftChild = leftChild;
-  this->rightChild = rightChild;
+  //cout<<"I am in unionRegexNode constructor"<<endl;
 }
 
 bool unionNode::isUnion(){
@@ -400,13 +426,9 @@ regexNode* unionNode::simplify(){
 /*********************** Concatination Node **************************/
 
 concatNode::concatNode(){
-  this->leftChild = new leafNode(NULLSET);;
-  this->rightChild = new leafNode(NULLSET);;
 }
 
 concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){
-  this->leftChild = leftChild;
-  this->rightChild = rightChild;
 }
 
 bool concatNode::isConcat(){
@@ -469,15 +491,13 @@ regexNode* concatNode::simplify(){
       
 
 ostream& operator << (ostream& s, regexNode* a){
-      
-      a->display();
-      
-      return s;
+  a->display();
+  return s;
 }
 
 ostream& operator << (ostream& s, regexNode& a){
-      a.display();
-      return s;
+  a.display();
+  return s;
 }
 
 /*
