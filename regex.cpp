@@ -117,7 +117,6 @@ regexNode * regexNode::operator - (regexNode& b){
 }
 
 regexNode::~regexNode(){
-  cout<<"destructor of regexNode called"<<endl;
 }
 
 
@@ -429,14 +428,8 @@ regexNode* concatNode::simplify(){
   if (leftChild->isLeaf()){
     if (leftChild->getSymbol() == NULLSET){  
       regexNode* temp = leftChild;
-      leftChild = new leafNode('q');
-      cout << "got in condition "<< endl;
-      cout << temp << endl;
-      cout << leftChild << endl;
-      cout << this->leftChild<<endl;
-      cout << this << endl;
+      leftChild = new leafNode(NULLSET);
       delete this;
-      cout << "still fine"<<endl;
       return temp;
     }
     /* EPSILON . R = R */
