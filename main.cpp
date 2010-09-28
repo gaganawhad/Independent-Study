@@ -53,7 +53,7 @@ int testGNFA(){
 	//for (int i =0; i< 4; i++){
 	//	for (int j =0 ; j < 4; j++){
 	//		cout<<i<<j<<endl;
-			a.deleteTransition(0,4);
+/*cantuse deleteTRansition anymore			a.deleteTransition(0,4); */
 	//	}
 	//}
 	
@@ -75,9 +75,27 @@ int testGNFA(){
 	}
 	regexNode* r = a.toRegexp();
 	cout<<"This is r:"<<r<<endl;
-	
 	return 0;
 }
-int main (){
-	return testGNFA();
+
+int codeJamTest(){
+  regexNode * l = new leafNode(NULLSET);
+  regexNode* s = new starNode(l); 
+  cout<<s<<endl;
+  s->simplify();
+  cout<<s<<endl;
+  delete s;
+  return 1;
 }
+
+
+
+
+//--------------------------------------------------
+// int main (){
+// //  return testGNFA();
+//   return codeJamTest();
+// 
+// }
+//-------------------------------------------------- 
+

@@ -13,9 +13,11 @@
 using namespace std;
 
 class regexNode{
+  protected:
+  virtual regexNode * getSimplifiedRegexPtr();
 	
   public:
-
+  //Virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
   //Test functions
   virtual bool isLeaf();
   virtual bool isStar();
@@ -40,7 +42,7 @@ class regexNode{
 
 
   //Operators
-  virtual regexNode * simplify() =0; // virtual functions call the function to the corresponding object, even though the pointer is declared for the class higher in the hierarchy
+  void simplify(); 
   regexNode * operator + (regexNode&  b);	
   regexNode * operator ++ (int);//The int is used to indicate that the operator is postfix.
   regexNode * operator - (regexNode&  b);
@@ -51,7 +53,6 @@ class regexNode{
 
   //Delete functions 
   virtual ~regexNode();
-  virtual bool cascadeDel();
   //virtual void delTree()=0;
 };
 
@@ -73,7 +74,6 @@ class unaryRegexNode: public regexNode{
   void type();
 
   virtual ~unaryRegexNode();
-  bool cascadeDel();
 //void delTree();
 };
 
@@ -83,7 +83,6 @@ class unaryRegexNode: public regexNode{
 /*********************** Binary Regex Node **************************/
 class binaryRegexNode: public unaryRegexNode{
   protected:
-  bool cascadeDel();
   regexNode* rightChild;
 
   public:
@@ -121,9 +120,8 @@ class leafNode: public regexNode {
   void display();
   void type();
 
-  regexNode* simplify();
+  regexNode * getSimplifiedRegexPtr();
 
-  bool cascadeDel();
 };
 
 
@@ -141,7 +139,7 @@ class starNode: public unaryRegexNode{
   void display();	
   void type();
 
-  regexNode* simplify(); 
+  regexNode * getSimplifiedRegexPtr();
  
 };
 
@@ -162,7 +160,7 @@ class unionNode: public binaryRegexNode{
   void type();
  
 
-  regexNode* simplify();
+  regexNode * getSimplifiedRegexPtr();
 };
 
 
@@ -180,7 +178,7 @@ class concatNode: public binaryRegexNode{
   void display();
   void type();
 
-  regexNode* simplify();
+  regexNode * getSimplifiedRegexPtr();
     
 };
 

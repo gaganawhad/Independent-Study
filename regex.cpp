@@ -100,6 +100,12 @@ void regexNode::type(){
   cout<<"Type is: regexNode"<<endl;
 }
 
+void simplify(){
+  regexNode* temp;
+  temp = this->getSimplifedRegexPtr();
+  this = temp;
+}
+
 
 regexNode * regexNode::operator + (regexNode&  b){
   regexNode * temp = new unionNode (this, &b);
@@ -120,9 +126,6 @@ regexNode::~regexNode(){
   cout<<"destructor of regexNode called"<<endl;
 }
 
-bool regexNode::cascadeDel(){
-  return false;
-}
 
 
 
@@ -141,7 +144,7 @@ unaryRegexNode::unaryRegexNode(regexNode *newleftChild){
 }
 
 bool unaryRegexNode::setLeftChild(regexNode* newLeftChild){
-  leftChild->cascadeDel();
+  delete leftChild;
   leftChild = newLeftChild;
   return true;
 }
@@ -163,13 +166,6 @@ unaryRegexNode::~unaryRegexNode(){
   delete leftChild;
 }
 
-bool unaryRegexNode::cascadeDel(){
-  if( leftChild != 0){
-    delete leftChild;
-  }
-  delete this;
-  return true;
-}
 
 
 // void unaryRegexNode::delTree(){
@@ -196,7 +192,7 @@ binaryRegexNode::binaryRegexNode( regexNode * leftChild, regexNode * rightChild)
 }
 
 bool binaryRegexNode::setRightChild(regexNode* newRightChild){
-  rightChild->cascadeDel();
+  delete rightChild;
   rightChild = newRightChild;
   return true;
 }
@@ -206,9 +202,9 @@ regexNode * binaryRegexNode::getRightChild(){
 }
 
 bool binaryRegexNode::setChildren(regexNode* newLeftChild, regexNode* newRightChild){
-  leftChild->cascadeDel();
-  rightChild->cascadeDel();
+  delete leftChild;
   this->leftChild = newLeftChild;
+  delete rightChild;
   this->rightChild = newRightChild;
   return true;
 }
@@ -220,18 +216,6 @@ alphabet binaryRegexNode::getLeaves(){
 
 void binaryRegexNode::type(){
   cout<<"Type is: binaryRegexNode"<<endl;
-}
-
-
-bool binaryRegexNode::cascadeDel(){
-  if (rightChild != 0){
-    delete rightChild;
-  }
-  if (leftChild != 0){
-    delete leftChild;
-  }	
-  delete this;
-  return true;
 }
 
 
@@ -293,16 +277,11 @@ void leafNode::type(){
 }
 
 
-regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
-  this->type();
+regexNode* leafNode::getSimplifiedRegexPtr(){ //leaf nodes cannot be simplified more.
+//  this->type();
   return this;
-
 }
 
-bool leafNode::cascadeDel(){
-  delete this;
-  return true;
-}
 
 
 
@@ -335,19 +314,17 @@ void starNode::type(){
       
 
 
-regexNode* starNode::simplify(){
-  this->type();
-  leftChild = leftChild->simplify();
+regexNode* starNode::getSimplifiedRegexPtr(){
+//  this->type();
+  leftChild->simplify();
   if(leftChild->isLeaf()){
   /* NULLSET * = {EPSILON} */
     if (leftChild->getSymbol() == NULLSET){  
       regexNode* temp = new leafNode(EPSILON);
-      delete leftChild; //not required because deleting this (on next line) will delete rightchild
       delete this;
       return temp;
     }
   }
-  return this;
 }
 
 
@@ -393,28 +370,27 @@ void unionNode::type(){
   cout<<"Type is: unionNode"<<endl;
 }
 
-regexNode* unionNode::simplify(){
-  this->type();
-  leftChild = leftChild->simplify();
-  rightChild = rightChild->simplify();
+regexNode* unionNode::getSimplifiedRegexPtr(){
+//  this->type();
+  leftChild->simplify();
+  rightChild->simplify();
   if(leftChild->isLeaf() && rightChild->isLeaf()){
     /* NULLSET U R = R  */
     if (leftChild->getSymbol() == NULLSET){ 
       regexNode* temp = rightChild;//becaue rightChild will no longer exist after deleting this
-      delete leftChild; //not required because deleting this (on next line) will delete rightchild
+      rightChild = 0;
       delete this;
       return temp;
     }
     /* R U NULLSET = R  */  
     else if (rightChild->getSymbol() == NULLSET){ 
       regexNode* temp = leftChild;
-      delete rightChild;//not required because deleting this (on next line) will delete rightchild
+      leftChild = 0;
       delete this;
       return temp;
     }
                 
   }
-  return this;	
 
 }
       
@@ -449,15 +425,15 @@ void concatNode::type(){
   cout<<"Type is: concatNode"<<endl;
 }
 
-regexNode* concatNode::simplify(){   
-  this->type();
-  leftChild = leftChild->simplify();
-  rightChild = rightChild->simplify();
+regexNode* concatNode::getSimplifiedRegexPtr(){   
+//  this->type();
+  leftChild->simplify();
+  rightChild->simplify();
   if(leftChild->isLeaf() && rightChild->isLeaf()){
     /*NULLSET . R = NULLSET  */
     if (leftChild->getSymbol() == NULLSET){  
       regexNode* temp = leftChild;
-      delete rightChild; //not required because deleting this (on next line) will delete rightchild
+      leftChild = 0;
       delete this;
       return temp;
     }
@@ -465,7 +441,7 @@ regexNode* concatNode::simplify(){
     /* R . NULLSET = NULLSET */
     else if (rightChild->getSymbol() == NULLSET){ 
       regexNode* temp = rightChild;
-      delete leftChild; //not required because deleting this (on next line) will delete rightchild
+      rightChild = 0;
       delete this;
       return temp;
     }
@@ -473,7 +449,7 @@ regexNode* concatNode::simplify(){
     /* EPSILON . R = R */
     else if (leftChild->getSymbol() == EPSILON){
       regexNode* temp = rightChild;
-      delete leftChild; //not required because deleting this (on next line) will delete rightchild
+      rightChild = 0;
       delete this;
       return temp;
     }
@@ -481,12 +457,11 @@ regexNode* concatNode::simplify(){
     /* R . EPSLION = R */
     else if (rightChild->getSymbol() == EPSILON){  
       regexNode* temp = leftChild;
-      delete rightChild; //not required because deleting this (on next line) will delete rightchild
+      leftChild = 0;
       delete this;
       return temp;
     }
   }
-  return this;
 }
       
 
