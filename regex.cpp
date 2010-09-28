@@ -301,6 +301,7 @@ regexNode* starNode::simplify(){
       return temp;
     }
   }
+  return this;
 }
 
 
@@ -371,6 +372,7 @@ regexNode* unionNode::simplify(){
     }
                 
   }
+  return this;
 
 }
       
@@ -417,7 +419,7 @@ regexNode* concatNode::simplify(){
     /*NULLSET . R = NULLSET  */
     if (leftChild->getSymbol() == NULLSET){  
       regexNode* temp = leftChild;
-      leftChild = 0;
+      leftChild = new leafNode(NULLSET);
       delete this;
       return temp;
     }
@@ -425,7 +427,7 @@ regexNode* concatNode::simplify(){
     /* R . NULLSET = NULLSET */
     else if (rightChild->getSymbol() == NULLSET){ 
       regexNode* temp = rightChild;
-      rightChild = 0;
+      rightChild = new leafNode(NULLSET);
       delete this;
       return temp;
     }
@@ -433,7 +435,7 @@ regexNode* concatNode::simplify(){
     /* EPSILON . R = R */
     else if (leftChild->getSymbol() == EPSILON){
       regexNode* temp = rightChild;
-      rightChild = 0;
+      rightChild = new leafNode(NULLSET);
       delete this;
       return temp;
     }
@@ -441,11 +443,12 @@ regexNode* concatNode::simplify(){
     /* R . EPSLION = R */
     else if (rightChild->getSymbol() == EPSILON){  
       regexNode* temp = leftChild;
-      leftChild = 0;
+      leftChild = new leafNode(NULLSET);
       delete this;
       return temp;
     }
   }
+  return this;
 }
       
 
