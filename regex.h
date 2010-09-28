@@ -61,8 +61,6 @@ class unaryRegexNode: public regexNode{
   regexNode* leftChild;
   
   public:
-  unaryRegexNode();
-  unaryRegexNode(regexNode *);
 
   bool setLeftChild(regexNode *);
   regexNode * getLeftChild();
@@ -83,8 +81,6 @@ class binaryRegexNode: public unaryRegexNode{
   regexNode* rightChild;
 
   public:
-  binaryRegexNode();
-  binaryRegexNode( regexNode *, regexNode * );	
   bool setRightChild(regexNode *) ;  
   regexNode * getRightChild();
   bool setChildren(regexNode* , regexNode* );

@@ -129,14 +129,6 @@ regexNode::~regexNode(){
 
 
 /*********************** Unary Regex-Node **************************/
-unaryRegexNode::unaryRegexNode(){
-  this->leftChild = new leafNode(NULLSET);
-}
-
-unaryRegexNode::unaryRegexNode(regexNode *newleftChild){
-  this->leftChild = newleftChild;
-}
-
 bool unaryRegexNode::setLeftChild(regexNode* newLeftChild){
   delete leftChild;
   leftChild = newLeftChild;
@@ -173,17 +165,6 @@ unaryRegexNode::~unaryRegexNode(){
 
 
 /*********************** Binary Regex-Node **************************/
-binaryRegexNode::binaryRegexNode(){
-  //cout<<"I am in binaryRegexNode constructor"<<endl;
-  this->leftChild = new leafNode(NULLSET);
-  this->rightChild = new leafNode(NULLSET);
-}
-
-binaryRegexNode::binaryRegexNode( regexNode * leftChild, regexNode * rightChild){
-  cout<<"I am in binaryRegexNode constructor"<<endl;
-  this->leftChild = leftChild;
-  this->rightChild = rightChild;
-}
 
 bool binaryRegexNode::setRightChild(regexNode* newRightChild){
   delete rightChild;
@@ -284,6 +265,7 @@ regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
 
 /*********************** Star Node **************************/
 starNode::starNode(){
+  this->leftChild = new leafNode(NULLSET);
 }
 
 starNode::starNode(regexNode *newleftChild){
@@ -325,11 +307,15 @@ regexNode* starNode::simplify(){
 
 /*********************** Union Node **************************/
 unionNode::unionNode(){
-  //  cout<<"I am in unionRegexNode constructor"<<endl;
+    cout<<"I am in unionRegexNode first constructor"<<endl;
+  this->leftChild = new leafNode(NULLSET);
+  this->rightChild = new leafNode(NULLSET);
 }
 
 unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
-  //cout<<"I am in unionRegexNode constructor"<<endl;
+  cout<<"I am in unionRegexNode second constructor"<<endl;
+  this->leftChild = leftChild;
+  this->rightChild = rightChild;
 }
 
 bool unionNode::isUnion(){
@@ -396,9 +382,13 @@ regexNode* unionNode::simplify(){
 /*********************** Concatination Node **************************/
 
 concatNode::concatNode(){
+  this->leftChild = new leafNode(NULLSET);
+  this->rightChild = new leafNode(NULLSET);
 }
 
 concatNode::concatNode(regexNode * leftChild, regexNode * rightChild){
+  this->leftChild = leftChild;
+  this->rightChild = rightChild;
 }
 
 bool concatNode::isConcat(){
