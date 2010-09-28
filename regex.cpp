@@ -100,12 +100,6 @@ void regexNode::type(){
   cout<<"Type is: regexNode"<<endl;
 }
 
-void simplify(){
-  regexNode* temp;
-  temp = this->getSimplifedRegexPtr();
-  this = temp;
-}
-
 
 regexNode * regexNode::operator + (regexNode&  b){
   regexNode * temp = new unionNode (this, &b);
@@ -180,7 +174,7 @@ unaryRegexNode::~unaryRegexNode(){
 
 /*********************** Binary Regex-Node **************************/
 binaryRegexNode::binaryRegexNode(){
-  cout<<"I am in binaryRegexNode constructor"<<endl;
+  //cout<<"I am in binaryRegexNode constructor"<<endl;
   this->leftChild = new leafNode(NULLSET);
   this->rightChild = new leafNode(NULLSET);
 }
@@ -277,7 +271,7 @@ void leafNode::type(){
 }
 
 
-regexNode* leafNode::getSimplifiedRegexPtr(){ //leaf nodes cannot be simplified more.
+regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
 //  this->type();
   return this;
 }
@@ -314,9 +308,9 @@ void starNode::type(){
       
 
 
-regexNode* starNode::getSimplifiedRegexPtr(){
+regexNode* starNode::simplify(){
 //  this->type();
-  leftChild->simplify();
+  leftChild = leftChild->simplify();
   if(leftChild->isLeaf()){
   /* NULLSET * = {EPSILON} */
     if (leftChild->getSymbol() == NULLSET){  
@@ -370,10 +364,10 @@ void unionNode::type(){
   cout<<"Type is: unionNode"<<endl;
 }
 
-regexNode* unionNode::getSimplifiedRegexPtr(){
+regexNode* unionNode::simplify(){
 //  this->type();
-  leftChild->simplify();
-  rightChild->simplify();
+  leftChild = leftChild->simplify();
+  rightChild = rightChild->simplify();
   if(leftChild->isLeaf() && rightChild->isLeaf()){
     /* NULLSET U R = R  */
     if (leftChild->getSymbol() == NULLSET){ 
@@ -425,10 +419,10 @@ void concatNode::type(){
   cout<<"Type is: concatNode"<<endl;
 }
 
-regexNode* concatNode::getSimplifiedRegexPtr(){   
+regexNode* concatNode::simplify(){   
 //  this->type();
-  leftChild->simplify();
-  rightChild->simplify();
+  leftChild = leftChild->simplify();
+  rightChild = rightChild->simplify();
   if(leftChild->isLeaf() && rightChild->isLeaf()){
     /*NULLSET . R = NULLSET  */
     if (leftChild->getSymbol() == NULLSET){  
