@@ -114,6 +114,7 @@ class leafNode: public regexNode {
   void type();
 
   regexNode * simplify();
+  ~leafNode();
 
 };
 
@@ -133,6 +134,7 @@ class starNode: public unaryRegexNode{
   void type();
 
   regexNode * simplify();
+  ~starNode();
  
 };
 
@@ -154,6 +156,7 @@ class unionNode: public binaryRegexNode{
  
 
   regexNode * simplify();
+  ~unionNode();
 };
 
 
@@ -172,6 +175,7 @@ class concatNode: public binaryRegexNode{
   void type();
 
   regexNode * simplify();
+  ~concatNode();
     
 };
 

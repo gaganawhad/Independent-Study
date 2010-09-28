@@ -149,7 +149,6 @@ void unaryRegexNode::type(){
 }
 
 unaryRegexNode::~unaryRegexNode(){
-  delete leftChild;
 }
 
 
@@ -195,8 +194,6 @@ void binaryRegexNode::type(){
 
 
 binaryRegexNode::~binaryRegexNode(){
-  delete leftChild;
-  delete rightChild;
 }
 
 /*********************** Leaf Node **************************/
@@ -257,6 +254,9 @@ regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
   return this;
 }
 
+leafNode::~leafNode(){
+}
+
 
 
 
@@ -302,6 +302,10 @@ regexNode* starNode::simplify(){
     }
   }
   return this;
+}
+
+starNode::~starNode(){
+  delete leftChild;
 }
 
 
@@ -376,6 +380,11 @@ regexNode* unionNode::simplify(){
   return this;
 
 }
+
+unionNode::~unionNode(){
+  delete leftChild;
+  delete rightChild;
+}
       
 
 
@@ -417,38 +426,51 @@ regexNode* concatNode::simplify(){
   leftChild = leftChild->simplify();
   rightChild = rightChild->simplify();
   /*NULLSET . R = NULLSET  */
-  if (leftChild->getSymbol() == NULLSET){  
-    regexNode* temp = leftChild;
-    leftChild = new leafNode(NULLSET);
-    delete this;
-    return temp;
+  if (leftChild->isLeaf()){
+    if (leftChild->getSymbol() == NULLSET){  
+      regexNode* temp = leftChild;
+      leftChild = new leafNode('q');
+      cout << "got in condition "<< endl;
+      cout << temp << endl;
+      cout << leftChild << endl;
+      cout << this->leftChild<<endl;
+      cout << this << endl;
+      delete this;
+      cout << "still fine"<<endl;
+      return temp;
+    }
+    /* EPSILON . R = R */
+    else if (leftChild->getSymbol() == EPSILON){
+      regexNode* temp = rightChild;
+      rightChild = new leafNode(NULLSET);
+      delete this;
+      return temp;
+    }
   }
               
   /* R . NULLSET = NULLSET */
-  else if (rightChild->getSymbol() == NULLSET){ 
-    regexNode* temp = rightChild;
-    rightChild = new leafNode(NULLSET);
-    delete this;
-    return temp;
-  }
-              
-  /* EPSILON . R = R */
-  else if (leftChild->getSymbol() == EPSILON){
-    regexNode* temp = rightChild;
-    rightChild = new leafNode(NULLSET);
-    delete this;
-    return temp;
-  }
-              
-  /* R . EPSLION = R */
-  else if (rightChild->getSymbol() == EPSILON){  
-    regexNode* temp = leftChild;
-    leftChild = new leafNode(NULLSET);
-    delete this;
-    return temp;
+  if (rightChild->isLeaf()){
+    if (rightChild->getSymbol() == NULLSET){ 
+      regexNode* temp = rightChild;
+      rightChild = new leafNode(NULLSET);
+      delete this;
+      return temp;
+    }
+    /* R . EPSLION = R */
+    else if (rightChild->getSymbol() == EPSILON){  
+      regexNode* temp = leftChild;
+      leftChild = new leafNode(NULLSET);
+      delete this;
+      return temp;
+    }
   }
   
   return this;
+}
+
+concatNode::~concatNode(){
+  delete leftChild;
+  delete rightChild;
 }
       
 
