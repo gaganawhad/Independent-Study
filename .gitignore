@@ -10,6 +10,8 @@ db/access_logs
 *.swp
 *.swo
 *.swn
+*.o
+project
 coverage
 public/system
 public/dgweb
