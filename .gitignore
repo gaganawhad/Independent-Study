@@ -11,6 +11,7 @@ db/access_logs
 *.swo
 *.swn
 *.o
+main*.*
 project
 coverage
 public/system
