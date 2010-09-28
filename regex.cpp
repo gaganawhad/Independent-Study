@@ -355,23 +355,26 @@ regexNode* unionNode::simplify(){
 //  this->type();
   leftChild = leftChild->simplify();
   rightChild = rightChild->simplify();
-  if(leftChild->isLeaf() && rightChild->isLeaf()){
     /* NULLSET U R = R  */
-    if (leftChild->getSymbol() == NULLSET){ 
-      regexNode* temp = rightChild;//becaue rightChild will no longer exist after deleting this
-      rightChild = 0;
-      delete this;
-      return temp;
+    if (leftChild->isLeaf()) {
+      if(leftChild->getSymbol() == NULLSET){ 
+        regexNode* temp = rightChild;//becaue rightChild will no longer exist after deleting this
+        rightChild = 0;
+        delete this;
+        return temp;
+      }
     }
     /* R U NULLSET = R  */  
-    else if (rightChild->getSymbol() == NULLSET){ 
-      regexNode* temp = leftChild;
-      leftChild = 0;
-      delete this;
-      return temp;
+    if (rightChild=>isleaf()){
+      if (rightChild->getSymbol() == NULLSET){ 
+        regexNode* temp = leftChild;
+        leftChild = 0;
+        delete this;
+        return temp;
+      }
     }
                 
-  }
+  
   return this;
 
 }
@@ -415,7 +418,6 @@ regexNode* concatNode::simplify(){
 //  this->type();
   leftChild = leftChild->simplify();
   rightChild = rightChild->simplify();
-  if(leftChild->isLeaf() && rightChild->isLeaf()){
     /*NULLSET . R = NULLSET  */
     if (leftChild->getSymbol() == NULLSET){  
       regexNode* temp = leftChild;
@@ -447,7 +449,7 @@ regexNode* concatNode::simplify(){
       delete this;
       return temp;
     }
-  }
+  
   return this;
 }
       
