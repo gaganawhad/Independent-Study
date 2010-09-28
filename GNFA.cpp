@@ -52,13 +52,13 @@ bool GNFA::setTransition (int i, int j, regexNode* k) {
 
 // Here do you want to create another constructor in which the argument n the number of states and a state of functions is given?
 bool GNFA::deleteTransition(int i, int j){
-  transFunction[i][j]->cascadeDel();
+  delete transFunction[i][j];
   return true;
 }
 
 
 bool GNFA::clearTransition (int i, int j){
-  transFunction[i][j]->cascadeDel();
+  delete transFunction[i][j];
   transFunction[i][j]= new leafNode(NULLSET); //find a way to make this null appropriately. 
   return true;
 }
