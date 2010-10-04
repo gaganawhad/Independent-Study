@@ -131,6 +131,10 @@ alphabet GNFA::getAlphabet(){
 }
 
 
+bool GNFA::setNoOfStates(int n){
+  this->noOfStates = n;
+}
+
 
 //This function does not do much apart from print number from 0 to n-1, n being the total number of states
 void GNFA::displayStates() {
@@ -254,75 +258,45 @@ bool GNFA::isDeterministic(){
 
 
 regexNode * GNFA::toRegexp(){
-  cout<<"A"<<endl;
   GNFA* fooGNFA = new GNFA(this->noOfStates + 2);
-  cout<<"B"<<endl;
   fooGNFA->setAcceptState(this->noOfStates + 1);
-  cout<<"C"<<endl;
   fooGNFA->setAlphabet(this->getAlphabet());
-  cout<<"D"<<endl;
   fooGNFA->setTransition(0, 1, new leafNode(EPSILON));
-  cout<<"E"<<endl;
   
   for(int i=0; i<noOfStates; i++){
     for(int j=0; j<noOfStates;j++){
       fooGNFA->setTransition(i+1, j+1, this->transFunction[i][j]);
+      this->transFunction[i][j] = new leafNode(NULLSET);
     }
     if(this->isAcceptState(i)){
-      fooGNFA->setTransition(i, noOfStates+1, new leafNode(EPSILON));
+      fooGNFA->setTransition(i+1, noOfStates+1, new leafNode(EPSILON));
     }
   }
 
-  cout<<"F"<<endl;
-  cout<<"G"<<endl;
-  cout<<*fooGNFA<<endl; //Used to dipsly what the GNFA looks like at the end of this. 
-  cout<<"H"<<endl;
+  cout<<"This is foo:"<<endl<<*fooGNFA<<endl; //Used to dipsly what the GNFA looks like at the end of this. 
 
   //The Floyd Warshall algorithm begins from here 
-  regexNode * result = fooGNFA->transFunction[0][noOfStates+1];
-  cout<<"I"<<endl;
-  result->simplify();
-  cout<<"J"<<endl;
-  cout<<"and result is :"<<result<<endl;
-  for(int k =1; k < noOfStates + 1; k++){
-    result = *result + *(*fooGNFA->transFunction[0][k] - *(*((*fooGNFA->transFunction[k][k])++) - *fooGNFA->transFunction[k][noOfStates +1]));
-    cout<<"k is :"<<k<<"and result is :"<<result<<endl;
-    result = result->simplify();
-    cout<<"k is :"<<k<<"and result is :"<<result<<endl;
+  for(int k = 0; k < noOfStates; k++){ 
+    for (int i = 0; i < noOfStates; i++){
+      for (int j = 0; j < noOfStates; j++){
+        transFunction[i][j] = *transFunction[i][j] + (*(*transFunction[i][k] - *(*((*transFunction[k][k])++) - *transFunction[k][j])));
+//      cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
+//      transFunction[i][j] = transFunction[i][j]->simplify();
+      }
+    }
   }
-  cout<<"K"<<endl;
-  cout<<result<<endl;
-  delete fooGNFA;
-  // shoudl i do a delete this??
-  return result;
-	 
-	//return result here after deciding if pointer should be returned or object
-	
-   /* carl sturtivant suggested the following method. argue with him the next time whether it is the best.  
-	for(int k = 0; k < noOfStates; k++){ 
-	cout<<"came here"<<endl;
-		for (int i = 0; i < noOfStates; i++){
-			for (int j = 0; k < noOfStates; j++){
-				transFunction[i][j] = *transFunction[i][j] + *(*transFunction[i][k] - *(*(new starNode(transFunction[k][k])) - *transFunction[k][j]));
-				transFunction[i][j]->simplify();
-			}
-			 
-		}
-	}
-		regexNode * result = new leafNode(NULLSET);
-	
-	for(int k = 0; k < noOfStates; k++) {
-		if (isAcceptState(k)){
-			result = *result + *transFunction[0][k];
-		}
-				
-		result->simplify();
-	}
-	delete this;			
-	return result;
-*/
-			
+  cout<<"done"<<endl;
+  regexNode * result = new leafNode(NULLSET);
 
+  for(int k = 0; k < noOfStates; k++) {
+    cout<<"Got in. K:"<<k<<endl;
+    if (isAcceptState(k)){
+      result = *result + *transFunction[0][k];
+    }
+//    result = result->simplify();
+  }
+// delete this;			
+  return result;
 }
 
 
