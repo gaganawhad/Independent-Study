@@ -6,7 +6,6 @@
  */
 
 
-//questions, should you be deleting the temp alphabet(s) that are getting created here? 
 
 #include "alphabet.h"
 #include <iostream>
