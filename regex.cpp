@@ -267,7 +267,8 @@ starNode::starNode(){
   this->leftChild = new leafNode(NULLSET);
 }
 
-starNode::starNode(regexNode *newleftChild){
+starNode::starNode(regexNode * newleftChild){
+  this->leftChild = newleftChild;
 }
 
 
