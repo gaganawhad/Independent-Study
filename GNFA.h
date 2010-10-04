@@ -27,7 +27,7 @@ class GNFA {
     vector<bool> acceptStates;//holds in pointers 0 to n-1 states 0 to n-
 
     //Constructor
-    GNFA(int n);
+    GNFA(int );
 
     //Transition Functions
     bool setTransition (int , int , regexNode* );
