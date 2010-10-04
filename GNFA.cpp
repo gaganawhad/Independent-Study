@@ -13,7 +13,7 @@
 #include "GNFA.h"
 #include <iostream>
 
-//This constructor creates a simple GNFA class that has states and has all possible transition functions as null set
+//This constructor creates a simple GNFA class that has states and has all possible transitioe functions as null set
 
 GNFA::GNFA(int n){
   this->noOfStates = n;
