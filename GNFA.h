@@ -30,18 +30,20 @@ class GNFA {
     GNFA(int n);
 
     //Transition Functions
-    bool setTransition (int i, int j, regexNode* k);
-    bool clearTransition (int i, int j);
+    bool setTransition (int , int , regexNode* );
+    bool clearTransition (int , int );
 
     //Functions for States
-    bool setAcceptState(int i);// remember states are numbered 0 to n-1
-    bool isAcceptState(int i);
-    bool resetAcceptState(int i);
+    bool setAcceptState(int );// remember states are numbered 0 to n-1
+    bool isAcceptState(int );
+    bool resetAcceptState(int );
     
     //Functions for the Alphabet
-    bool setAlphabet(char* temp);
+    bool setAlphabet(char* );
     bool setAlphabet(alphabet);
     alphabet getAlphabet();
+
+    bool setNoOfStates(int);
 
     //The following are the functions ued for display purposes
     void displayStates();
@@ -64,6 +66,7 @@ class GNFA {
 
   private:
     bool deleteTransition(int i, int j);
+    bool setTransitionPtr(int , int , regexNode* );
     
 };
 
