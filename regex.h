@@ -40,12 +40,12 @@ class regexNode{
 
   //Operators
   virtual regexNode * simplify() = 0; 
-  regexNode * operator + (regexNode&  b);	
+  regexNode * operator + (regexNode&  );	
   regexNode * operator ++ (int);//The int is used to indicate that the operator is postfix.
-  regexNode * operator - (regexNode&  b);
-  friend ostream& operator << (ostream& s, regexNode* a);
-  friend ostream& operator << (ostream& s, regexNode& a);
-  friend istream& operator >> (istream& s, regexNode& a);
+  regexNode * operator - (regexNode&  );
+  friend ostream& operator << (ostream& , regexNode* );
+  friend ostream& operator << (ostream& , regexNode& );
+  friend istream& operator >> (istream& , regexNode& );
 
 
   //Delete functions 
@@ -146,7 +146,7 @@ class unionNode: public binaryRegexNode{
   public:
 
   unionNode();
-  unionNode( regexNode * leftChild, regexNode * rightChild);	
+  unionNode( regexNode * , regexNode * );	
 
   bool isUnion();
   bool isUnionTree();
@@ -167,7 +167,7 @@ class concatNode: public binaryRegexNode{
   public:
 
   concatNode();
-  concatNode(regexNode * leftChild, regexNode * rightChild);
+  concatNode(regexNode * , regexNode * );
 
   bool isConcat();
   
@@ -181,7 +181,7 @@ class concatNode: public binaryRegexNode{
 
 
 //void operator << (ostream& s, regex& a);
-ostream& operator << (ostream& s, regexNode* a);
-ostream& operator << (ostream& s, regexNode& a);
-istream& operator >> (istream& s, regexNode& a);
+ostream& operator << (ostream& , regexNode* );
+ostream& operator << (ostream& , regexNode& );
+istream& operator >> (istream& , regexNode& );
 
