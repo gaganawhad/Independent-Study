@@ -312,13 +312,11 @@ starNode::~starNode(){
 
 /*********************** Union Node **************************/
 unionNode::unionNode(){
-    cout<<"I am in unionRegexNode first constructor"<<endl;
   this->leftChild = new leafNode(NULLSET);
   this->rightChild = new leafNode(NULLSET);
 }
 
 unionNode::unionNode( regexNode * leftChild, regexNode * rightChild){
-  cout<<"I am in unionRegexNode second constructor"<<endl;
   this->leftChild = leftChild;
   this->rightChild = rightChild;
 }
