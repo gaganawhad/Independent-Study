@@ -51,7 +51,6 @@ alphabet alphabet:: operator + (alphabet beta){
 alphabet alphabet:: operator - (alphabet beta){
 		alphabet temp;
 		temp.alphaSymbols = alphaSymbols ^= beta.alphaSymbols;
-		temp.disp();
 		return temp;
 	}
 	
