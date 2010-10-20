@@ -29,6 +29,21 @@ GNFA::GNFA(int n){
     transFunction.push_back(temp);
   }
   
+  //following code initializes transCube for possible later use
+  for(int k = 0; k < noOfStates + 3; k++){
+    transMatrix temp1;
+    for (int i = 0; i< noOfStates + 2 ; i++){
+      transVector temp;
+      for (int j = 0; j< noOfStates + 2; j++){
+        //cout<<i<<j<<endl; //used for the sake of debugging
+        temp.push_back(new leafNode(NULLSET));
+      }	
+
+      temp1.push_back(temp);
+    }
+    transCube.push_back(temp1);
+  }
+  
 
 }
 
@@ -258,45 +273,67 @@ bool GNFA::isDeterministic(){
 
 
 regexNode * GNFA::toRegexp(){
-  GNFA* fooGNFA = new GNFA(this->noOfStates + 2);
-  fooGNFA->setAcceptState(this->noOfStates + 1);
-  fooGNFA->setAlphabet(this->getAlphabet());
-  fooGNFA->setTransition(0, 1, new leafNode(EPSILON));
-  
+  cout << "in" << endl;
+  delete transCube[0][0][1];
+  transCube[0][0][1] = new leafNode(EPSILON);
+
+
   for(int i=0; i<noOfStates; i++){
     for(int j=0; j<noOfStates;j++){
-      fooGNFA->setTransition(i+1, j+1, this->transFunction[i][j]);
-      this->transFunction[i][j] = new leafNode(NULLSET);
+      delete transCube[0][i+1][j+1];
+      transCube[0][i+1][j+1] =  this->transFunction[i][j]->replicate();
     }
     if(this->isAcceptState(i)){
-      fooGNFA->setTransition(i+1, noOfStates+1, new leafNode(EPSILON));
+      delete transCube[0][i+1][noOfStates+1];
+      transCube[0][i+1][noOfStates+1] = new leafNode(EPSILON);
     }
   }
 
-  cout<<"This is foo:"<<endl<<*fooGNFA<<endl; //Used to dipsly what the GNFA looks like at the end of this. 
+  for(int k = 1; k < noOfStates + 3 ; k++){ 
+    for (int i = 0; i < noOfStates + 2; i++){
+      for (int j = 0; j < noOfStates + 2; j++){
+        regexNode * a, *b, *c, *d;
+        a = transCube[k-1][i][j]->replicate();
+        b = transCube[k-1][i][k-1]->replicate();
+        c = transCube[k-1][k-1][j]->replicate();
+        d = transCube[k-1][k-1][k-1]->replicate();
 
-  //The Floyd Warshall algorithm begins from here 
-  for(int k = 0; k < noOfStates; k++){ 
-    for (int i = 0; i < noOfStates; i++){
-      for (int j = 0; j < noOfStates; j++){
-        transFunction[i][j] = *transFunction[i][j] + (*(*transFunction[i][k] - *(*((*transFunction[k][k])++) - *transFunction[k][j])));
-//      cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
-//      transFunction[i][j] = transFunction[i][j]->simplify();
+        transCube[k][i][j] = *a + (*(*b - *(*((*d)++) - *c)));
+        cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
+       cout<<transCube[k][i][j]<<endl;
+        transCube[k][i][j] = transCube[k][i][j]->simplify();
+        cout<<transCube[k][i][j]<<endl;
       }
     }
   }
-  cout<<"done"<<endl;
-  regexNode * result = new leafNode(NULLSET);
 
+
+
+//--------------------------------------------------
+//   // Used for debugging purposes 
+//   cout<<"this is final matrix"<< endl;
+//   for (int i =0; i< noOfStates +2; i++){
+//     for (int j =0 ; j < noOfStates +2; j++){
+//             cout<<i<<j<<" "<<transCube[noOfStates +2][i][j]<<endl;
+//     }
+//   }
+//-------------------------------------------------- 
+  
+  regexNode * result = new leafNode(NULLSET);
   for(int k = 0; k < noOfStates; k++) {
-    cout<<"Got in. K:"<<k<<endl;
     if (isAcceptState(k)){
-      result = *result + *transFunction[0][k];
+     cout<<"Got in. K:"<<k<<endl;
+      regexNode * temp = result->replicate();
+      delete result;
+      result = *temp + *transCube[noOfStates + 2][0][k+1];
     }
-//    result = result->simplify();
   }
-// delete this;			
+
+
+  result = result->simplify();
   return result;
+
+
 }
 
 
