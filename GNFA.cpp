@@ -299,10 +299,10 @@ regexNode * GNFA::toRegexp(){
         d = transCube[k-1][k-1][k-1]->replicate();
 
         transCube[k][i][j] = *a + (*(*b - *(*((*d)++) - *c)));
-        cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
-       cout<<transCube[k][i][j]<<endl;
+//      cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
+//      cout<<transCube[k][i][j]<<endl;
         transCube[k][i][j] = transCube[k][i][j]->simplify();
-        cout<<transCube[k][i][j]<<endl;
+//      cout<<transCube[k][i][j]<<endl;
       }
     }
   }
