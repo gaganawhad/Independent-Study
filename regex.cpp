@@ -253,6 +253,10 @@ regexNode* leafNode::simplify(){ //leaf nodes cannot be simplified more.
   return this;
 }
 
+regexNode* leafNode::replicate(){ //leaf nodes cannot be simplified more.
+  return new leafNode(symbol);
+}
+
 leafNode::~leafNode(){
 }
 
@@ -302,6 +306,10 @@ regexNode* starNode::simplify(){
     }
   }
   return this;
+}
+
+regexNode* starNode::replicate(){ 
+  return  new starNode(leftChild->replicate());
 }
 
 starNode::~starNode(){
@@ -379,6 +387,9 @@ regexNode* unionNode::simplify(){
 
 }
 
+regexNode* unionNode::replicate(){ 
+  return  new unionNode(leftChild->replicate(), rightChild->replicate());
+}
 unionNode::~unionNode(){
   delete leftChild;
   delete rightChild;
@@ -460,6 +471,9 @@ regexNode* concatNode::simplify(){
   return this;
 }
 
+regexNode* concatNode::replicate(){ 
+  return new concatNode(leftChild->replicate(), rightChild->replicate());
+}
 concatNode::~concatNode(){
   delete leftChild;
   delete rightChild;

@@ -40,6 +40,7 @@ class regexNode{
 
   //Operators
   virtual regexNode * simplify() = 0; 
+  virtual regexNode * replicate() =0;
   regexNode * operator + (regexNode&  );	
   regexNode * operator ++ (int);//The int is used to indicate that the operator is postfix.
   regexNode * operator - (regexNode&  );
@@ -114,6 +115,7 @@ class leafNode: public regexNode {
   void type();
 
   regexNode * simplify();
+  regexNode * replicate();
   ~leafNode();
 
 };
@@ -134,6 +136,7 @@ class starNode: public unaryRegexNode{
   void type();
 
   regexNode * simplify();
+  regexNode * replicate();
   ~starNode();
  
 };
@@ -156,6 +159,7 @@ class unionNode: public binaryRegexNode{
  
 
   regexNode * simplify();
+  regexNode * replicate();
   ~unionNode();
 };
 
@@ -175,6 +179,7 @@ class concatNode: public binaryRegexNode{
   void type();
 
   regexNode * simplify();
+  regexNode * replicate();
   ~concatNode();
     
 };
