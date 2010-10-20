@@ -26,6 +26,7 @@ class GNFA {
     vector <transVector> transFunction; // this is a vector of vectors used to store the transition function. 
     vector<bool> acceptStates;//holds in pointers 0 to n-1 states 0 to n-
 
+
     //Constructor
     GNFA(int );
 
@@ -67,6 +68,8 @@ class GNFA {
   private:
     bool deleteTransition(int i, int j);
     bool setTransitionPtr(int , int , regexNode* );
+    typedef vector <transVector> transMatrix; 
+    vector <transMatrix> transCube; // this is a vector of vectors used to store the transition function. 
     
 };
 
