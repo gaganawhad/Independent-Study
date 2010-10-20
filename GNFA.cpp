@@ -273,7 +273,9 @@ bool GNFA::isDeterministic(){
 
 
 regexNode * GNFA::toRegexp(){
-  cout << "in" << endl;
+  cout<<"Using Floyd-Warshall algorithm to convert the automaton to regular expression"<<endl;
+
+  cout<<"The current GNFA is:"<<endl<<*this<<endl;
   delete transCube[0][0][1];
   transCube[0][0][1] = new leafNode(EPSILON);
 
@@ -298,6 +300,7 @@ regexNode * GNFA::toRegexp(){
         c = transCube[k-1][k-1][j]->replicate();
         d = transCube[k-1][k-1][k-1]->replicate();
 
+        delete transCube[k][i][j];
         transCube[k][i][j] = *a + (*(*b - *(*((*d)++) - *c)));
 //      cout<<"This is i:"<<i<<"This is j:"<<j<<"This is k:"<<k<<endl;
 //      cout<<transCube[k][i][j]<<endl;
@@ -309,20 +312,17 @@ regexNode * GNFA::toRegexp(){
 
 
 
-//--------------------------------------------------
-//   // Used for debugging purposes 
-//   cout<<"this is final matrix"<< endl;
-//   for (int i =0; i< noOfStates +2; i++){
-//     for (int j =0 ; j < noOfStates +2; j++){
-//             cout<<i<<j<<" "<<transCube[noOfStates +2][i][j]<<endl;
-//     }
-//   }
-//-------------------------------------------------- 
+  // Used for debugging purposes 
+  cout<<"This is final matrix:"<< endl;
+  for (int i =0; i< noOfStates +2; i++){
+    for (int j =0 ; j < noOfStates +2; j++){
+            cout<<i<<j<<" "<<transCube[noOfStates +2][i][j]<<endl;
+    }
+  }
   
   regexNode * result = new leafNode(NULLSET);
   for(int k = 0; k < noOfStates; k++) {
     if (isAcceptState(k)){
-     cout<<"Got in. K:"<<k<<endl;
       regexNode * temp = result->replicate();
       delete result;
       result = *temp + *transCube[noOfStates + 2][0][k+1];
